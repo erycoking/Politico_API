@@ -1,4 +1,3 @@
-import uuid
 import bcrypt
 
 """
@@ -7,9 +6,9 @@ import bcrypt
 class User:
     """User class"""
 
-    def __init__(self, firstname, lastname, othername, email, phoneNumber, passportUrl, isAdmin, idNo, username, password):
+    def __init__(self, id, firstname, lastname, othername, email, phoneNumber, passportUrl, isAdmin, idNo, username, password):
         """Constructor"""
-        self.id = uuid.uuid4().hex
+        self.id = id
         self.firstname = firstname
         self.lastname = lastname
         self.othername = othername
@@ -169,8 +168,10 @@ class userTable:
 
     # stores a list of users
     users = [
-        User('Erick', 'Lomunyak', 'Loningo', 'erycoking360@gmail.com', '0712345678', 'file/passports/passport1.png', True, 123456789, 'erycoking', 'password')
+        User(1,'Erick', 'Lomunyak', 'Loningo', 'erycoking360@gmail.com', '0712345678', 'file/passports/passport1.png', True, 123456789, 'erycoking', 'password')
     ]
+
+    next_id = len(users) + 1
 
     def get_all_users(self):
         all_users = []
@@ -184,7 +185,7 @@ class userTable:
     def get_user_with_id(self, id):
         #  gets a single user that matches the user id
         for person in self.users:
-            if person.id == str(id):
+            if person.id == int(id):
                 return person.user_data
 
     def get_user_with_email(self, email):
@@ -197,6 +198,7 @@ class userTable:
     def add_user(self, user_data):
         # add a new user to the users list
         new_user = User(
+            self.next_id, 
             user_data['firstname'], 
             user_data['lastname'], 
             user_data['othername'], 
@@ -233,7 +235,7 @@ class userTable:
     def delete_user(self, user):
         # deletes user in the user list
         for i in range(len(self.users)):
-            if self.users[i].id == user['id']:
+            if self.users[i].id == int(user['id']):
                 del self.users[i]
                 return True
         
