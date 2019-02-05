@@ -5,20 +5,20 @@ user = Blueprint('user', __name__)
 
 user_table = userTable()
 
-@user.route('/user', methods=['GET'])
+@user.route('/users', methods=['GET'])
 def get_user():
     return make_response(jsonify({
         'status': 200, 
         'data': user_table.get_all_users()
     }), 200)
 
-@user.route('/user/<id>', methods=['GET'])
+@user.route('/users/<id>', methods=['GET'])
 def get_single_user(id):    
     user = user_table.get_user_with_id(id)
     if user != None:
         return make_response(jsonify({
             'status': 200, 
-            'data': user
+            'data': [user]
         }), 200)
     else:
         return make_response(jsonify({
@@ -26,7 +26,7 @@ def get_single_user(id):
             'error': 'No user with id:{} was found'.format(id)
         }))
 
-@user.route('/user', methods=['POST'])
+@user.route('/users', methods=['POST'])
 def addUser():
     user_data = request.get_json()
     msg = validateKeysInUser(user_data)
@@ -52,10 +52,10 @@ def addUser():
 
     user1 = user_table.get_user_with_email(user_data['email'])
     if not user1:
-        user_table.add_user(user_data)
+        added_user = user_table.add_user(user_data)
         return make_response(jsonify({
             'status': 201,
-            'data': 'user successfully created'
+            'data': [added_user]
         }), 201)
     else:
         return make_response(jsonify({
@@ -64,7 +64,7 @@ def addUser():
         }), 406)
 
 
-@user.route('/user/<id>', methods=['PUT'])
+@user.route('/users/<id>', methods=['PATCH'])
 def update(id):
     user_data = request.get_json()
     msg = validateKeysInUser(user_data)
@@ -96,15 +96,15 @@ def update(id):
             'error': 'No user with id:{} was found'.format(id)
         }), 406)
     else:
-        user_table.update_user(id, user_data)
+        updated_user = user_table.update_user(id, user_data)
         print('updated****')
         return make_response(jsonify({
             'status': 201,
-            'data': 'user successfully updated'
+            'data': [updated_user]
         }), 201)
         
 
-@user.route('/user/<id>', methods=['DELETE'])
+@user.route('/users/<id>', methods=['DELETE'])
 def delete(id): 
     user = user_table.get_user_with_id(id)
     print(user)
@@ -114,7 +114,9 @@ def delete(id):
             print('**deleted**')
             return make_response(jsonify({
                 'status': 201,
-                'data': 'user successfully deleted'
+                'data': {
+                    'message': 'user successfully deleted'
+                }
             }), 202)
     else:
         return make_response(jsonify({

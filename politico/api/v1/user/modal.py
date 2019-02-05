@@ -211,6 +211,7 @@ class userTable:
             user_data['password']
         )
         self.users.append(new_user)
+        return new_user.user_data
 
     def update_user(self, id, user_data):
         # add a new user to the users list
@@ -229,8 +230,9 @@ class userTable:
                 self.users[i].username = user_data['username']
                 self.users[i].password = bcrypt.hashpw(user_data['password'].encode('base64'), bcrypt.gensalt())
                 print('updated')
+                break
 
-    
+        return self.get_user_with_id(id)
 
     def delete_user(self, user):
         # deletes user in the user list
