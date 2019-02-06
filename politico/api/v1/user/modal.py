@@ -6,17 +6,17 @@ import bcrypt
 class User:
     """User class"""
 
-    def __init__(self, id, firstname, lastname, othername, email, phoneNumber, passportUrl, isAdmin, idNo, username, password):
+    def __init__(self, id, firstname, lastname, othername, email, phone_number, passport_url, is_admin, id_no, username, password):
         """Constructor"""
         self.id = id
         self.firstname = firstname
         self.lastname = lastname
         self.othername = othername
         self.email = email
-        self.phoneNumber = phoneNumber
-        self.passportUrl = passportUrl
-        self.isAdmin = isAdmin
-        self.idNo = idNo
+        self.phone_number = phone_number
+        self.passport_url = passport_url
+        self.is_admin = is_admin
+        self.id_no = id_no
         self.username = username
         self.password = bcrypt.hashpw(password.encode('base64'), bcrypt.gensalt())
 
@@ -26,120 +26,67 @@ class User:
         """id getter"""
         return self.id
 
-    @id.setter
-    def id(self, id):
-        """id setter"""
-        self.id = id
-
     @property
     def firstname(self):
         """firstname getter"""
         return self.firstname
-
-    @firstname.setter
-    def firstname(self, fname):
-        """firstname setter"""
-        self.firstname = fname
 
     @property
     def lastname(self):
         """lastname getter"""
         return self.lastname
 
-    @lastname.setter
-    def lastname(self, lname):
-        """lastname setter"""
-        self.lastname = lname
 
     @property
     def othername(self):
         """othername getter"""
         return self.othername
 
-    @othername.setter
-    def othername(self, oname):
-        """othername setter"""
-        self.othername = oname
-
     @property
     def email(self):
         """email getter"""
         return self.email
 
-    @email.setter
-    def email(self, email):
-        """email setter"""
-        self.email = email
+    @property
+    def phone_number(self):
+        """phone_number getter"""
+        return self.phone_number
+
 
     @property
-    def phoneNumber(self):
-        """phoneNumber getter"""
-        return self.phoneNumber
-
-    @phoneNumber.setter
-    def phoneNumber(self, pnumber):
-        """phoneNumber setter"""
-        self.phoneNumber = pnumber
+    def passport_url(self):
+        """passport_url getter"""
+        return self.passport_url
 
     @property
-    def passportUrl(self):
-        """passportUrl getter"""
-        return self.passportUrl
-
-    @passportUrl.setter
-    def passportUrl(self, url):
-        """passportUrl setter"""
-        self.passportUrl = url
+    def is_admin(self):
+        """is_admin getter"""
+        return self.is_admin
 
     @property
-    def isAdmin(self):
-        """isAdmin getter"""
-        return self.isAdmin
-
-    @isAdmin.setter
-    def isAdmin(self, admin):
-        """isAdmin setter"""
-        self.isAdmin = admin
-
-    @property
-    def idNo(self):
-        """idNo getter"""
-        return self.idNo
-
-    @idNo.setter
-    def idNo(self, no):
-        """idNo setter"""
-        self.idNo = no
+    def id_no(self):
+        """id_no getter"""
+        return self.id_no
 
     @property
     def username(self):
         """username getter"""
         return self.username
 
-    @username.setter
-    def username(self, uname):
-        """username setter"""
-        self.username = uname
-
     @property
     def password(self):
         """password getter"""
         return self.password
 
-    @password.setter
-    def password(self, pswd):
-        """password setter"""
-        self.password = pswd
-
     @property
-    def fullName(self):
-        """fullname getter"""
+    def full_name(self):
+        """full_name getter"""
         return '{} {} {}'.format(self.firstname, self.othername, self.lastname)
 
-    @fullName.setter
-    def fullName(self, fullname):
-        """fullname setter"""
-        self.firstname, self.othername, self.lastname = fullname.split(' ')
+    @full_name.setter
+    def full_name(self, full_name):
+        """full_name setter"""
+        self.firstname, self.othername, self.lastname = full_name.split(' ')
 
     @property
     def user_data(self):
@@ -150,24 +97,24 @@ class User:
         user_data['lastname'] = self.lastname
         user_data['othername'] = self.othername
         user_data['email'] = self.email
-        user_data['phoneNumber'] = self.phoneNumber
-        user_data['passportUrl'] = self.passportUrl
-        user_data['isAdmin'] = self.isAdmin
-        user_data['idNo'] = self.idNo
+        user_data['phone_number'] = self.phone_number
+        user_data['passport_url'] = self.passport_url
+        user_data['is_admin'] = self.is_admin
+        user_data['id_no'] = self.id_no
         user_data['username'] = self.username
         user_data['password'] = self.password
         return user_data
 
     @property
-    def user_patch(self):
-        user_patch = {}
-        user_patch['id'] = self.id
-        user_patch['fullname'] = self.fullName
-        return user_patch
+    def user_data_2(self):
+        user_data_2 = {}
+        user_data_2['id'] = self.id
+        user_data_2['full_name'] = self.full_name
+        return user_data_2
 
 
 """Acts as a table for storing users """
-class userTable:
+class UserTable:
     """User table class"""
 
     def __init__(self):
@@ -210,33 +157,32 @@ class userTable:
             user_data['lastname'], 
             user_data['othername'], 
             user_data['email'], 
-            user_data['phoneNumber'], 
-            user_data['passportUrl'], 
-            user_data['isAdmin'], 
-            user_data['idNo'], 
+            user_data['phone_number'], 
+            user_data['passport_url'], 
+            user_data['is_admin'], 
+            user_data['id_no'], 
             user_data['username'], 
             user_data['password']
         )
         self.users.append(new_user)
-        return new_user.user_patch
+        return new_user.user_data_2
 
     def update_user(self, id, user_data):
         # add a new user to the users list
 
         for i in range(len(self.users)):
             if self.users[i].id == int(id):
-                print('match found')
                 self.users[i].firstname = user_data['firstname']
                 self.users[i].lastname = user_data['lastname']
                 self.users[i].othername = user_data['othername']
                 self.users[i].email = user_data['email']
-                self.users[i].phoneNumber = user_data['phoneNumber']
-                self.users[i].passportUrl = user_data['passportUrl']
-                self.users[i].isAdmin = user_data['isAdmin']
-                self.users[i].idNo = user_data['idNo']
+                self.users[i].phone_number = user_data['phone_number']
+                self.users[i].passport_url = user_data['passport_url']
+                self.users[i].is_admin = user_data['is_admin']
+                self.users[i].id_no = user_data['id_no']
                 self.users[i].username = user_data['username']
                 self.users[i].password = bcrypt.hashpw(user_data['password'].encode('base64'), bcrypt.gensalt())
-                return self.users[i].user_patch
+                return self.users[i].user_data_2
 
         
 

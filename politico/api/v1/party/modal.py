@@ -3,43 +3,27 @@
 """
 
 class Party:
-    def __init__(self, id, name, hqAddress, logoUrl):
+    def __init__(self, id, name, hq_address, logo_url):
         self.id = id
         self.name = name
-        self.hqAddress = hqAddress
-        self.logoUrl = logoUrl
+        self.hq_address = hq_address
+        self.logo_url = logo_url
 
     @property
     def id(self):
         return self.id
 
-    @id.setter
-    def id(self, id):
-        self.id = id
-
     @property
     def name(self):
         return self.name
 
-    @name.setter
-    def name(self, name):
-        self.name = name
+    @property
+    def hq_address(self):
+        return self.hq_address
 
     @property
-    def hqAddress(self):
-        return self.hqAddress
-
-    @hqAddress.setter
-    def hqAddress(self, hqAddress):
-        self.hqAddress = hqAddress
-
-    @property
-    def logoUrl(self):
-        return self.logoUrl
-
-    @logoUrl.setter
-    def logoUrl(self, logoUrl):
-        self.logoUrl = logoUrl
+    def logo_url(self):
+        return self.logo_url
 
 
     @property
@@ -47,23 +31,20 @@ class Party:
         party_data = {}
         party_data['id'] = self.id
         party_data['name'] = self.name
-        party_data['hqAddress'] = self.hqAddress
-        party_data['logoUrl'] = self.logoUrl
+        party_data['hq_address'] = self.hq_address
+        party_data['logo_url'] = self.logo_url
         return party_data
 
     @property
-    def party_patch(self):
-        party_patch = {}
-        party_patch['id'] = self.id
-        party_patch['name'] = self.name
-        return party_patch
+    def party_data_for_updates_and_deletes(self):
+        party_data_for_updates_and_deletes = {}
+        party_data_for_updates_and_deletes['id'] = self.id
+        party_data_for_updates_and_deletes['name'] = self.name
+        return party_data_for_updates_and_deletes
 
 
-class partyTable:
+class PartyTable:
     """ acts as a table for storing parties and their related information"""
-
-    def __init__(self):
-        pass
 
     parties = [
         Party(1, 'ygb', 'Westlands, Nairobi', 'logo/logo.jpg')
@@ -95,20 +76,20 @@ class partyTable:
         new_party = Party(
             self.next_id, 
             party_data['name'],
-            party_data['hqAddress'], 
-            party_data['logoUrl']
+            party_data['hq_address'], 
+            party_data['logo_url']
         )
         self.parties.append(new_party)
-        return new_party.party_patch
+        return new_party.party_data_for_updates_and_deletes
 
     def update_party(self, id, party_data):
         # updates party data
         for i in range(len(self.parties)):
             if self.parties[i].id == id:
                 self.parties[i].name = party_data['name']
-                self.parties[i].hqAddress = party_data['hqAddress']
-                self.parties[i].logoUrl = party_data['logoUrl']
-                return self.parties[i].party_patch
+                self.parties[i].hq_address = party_data['hq_address']
+                self.parties[i].logo_url = party_data['logo_url']
+                return self.parties[i].party_data_for_updates_and_deletes
 
     def delete_party(self, id):
         # deletes a party from the list of parties

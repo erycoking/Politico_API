@@ -1,9 +1,9 @@
 from flask import Blueprint, make_response, request, jsonify
-from politico.api.v1.user.modal import userTable
+from politico.api.v1.user.modal import UserTable
 
 user = Blueprint('user', __name__)
 
-user_table = userTable()
+user_table = UserTable()
 
 @user.route('/users', methods=['GET'])
 def get_user():
@@ -29,26 +29,26 @@ def get_single_user(id):
 @user.route('/users', methods=['POST'])
 def addUser():
     user_data = request.get_json()
-    msg = validateKeysInUser(user_data)
+    msg = validate_keys_in_user_data(user_data)
     if msg != 'ok':
         return make_response(jsonify({
-            'status': 406, 
+            'status': 400, 
             'error': msg
-        }), 406)
+        }), 400)
 
-    msg1 = validateValueInUser(user_data)
+    msg1 = validate_value_in_user_data(user_data)
     if msg1 != 'ok':
         return make_response(jsonify({
-            'status': 406, 
+            'status': 400, 
             'error': msg1
-        }), 406)
+        }), 400)
 
-    msg2 = validateUserInputType(user_data)
+    msg2 = validate_user_input_type(user_data)
     if msg2 != 'ok':
         return make_response(jsonify({
-            'status': 406, 
+            'status': 400, 
             'error': msg2
-        }), 406)
+        }), 400)
 
     user1 = user_table.get_user_with_email(user_data['email'])
     if not user1:
@@ -67,29 +67,28 @@ def addUser():
 @user.route('/users/<id>', methods=['PATCH'])
 def update(id):
     user_data = request.get_json()
-    msg = validateKeysInUser(user_data)
+    msg = validate_keys_in_user_data(user_data)
     if msg != 'ok':
         return make_response(jsonify({
-            'status': 406, 
+            'status': 400, 
             'error': msg
-        }), 406)
+        }), 400)
 
-    msg1 = validateValueInUser(user_data)
+    msg1 = validate_value_in_user_data(user_data)
     if msg1 != 'ok':
         return make_response(jsonify({
-            'status': 406, 
+            'status': 400, 
             'error': msg1
-        }), 406)
+        }), 400)
 
-    msg2 = validateUserInputType(user_data)
+    msg2 = validate_user_input_type(user_data)
     if msg2 != 'ok':
         return make_response(jsonify({
-            'status': 406, 
+            'status': 400, 
             'error': msg2
-        }), 406)
+        }), 400)
 
     user = user_table.get_user_with_id(id)
-    print(user)
     if not user:
         return make_response(jsonify({
             'status': 404, 
@@ -104,9 +103,9 @@ def update(id):
             }), 500)
         else:
             return make_response(jsonify({
-                'status': 202,
+                'status': 200,
                 'data': [updated_user]
-            }), 202)
+            }), 200)
         
 
 @user.route('/users/<id>', methods=['DELETE'])
@@ -114,13 +113,12 @@ def delete(id):
     user = user_table.get_user_with_id(id)
     if user:
         if user_table.delete_user(id):
-            print('**deleted**')
             return make_response(jsonify({
-                'status': 202,
+                'status': 200,
                 'data': {
                     'message': 'user successfully deleted'
                 }
-            }), 202)
+            }), 200)
         else:
             return make_response(jsonify({
                 'status': 500, 
@@ -132,7 +130,7 @@ def delete(id):
             'error': 'No user with id:{} was found'.format(id)
         }), 404)
 
-def validateKeysInUser(user):
+def validate_keys_in_user_data(user):
     if not user:
         return 'No user found'
     elif 'firstname' not in user:
@@ -141,14 +139,14 @@ def validateKeysInUser(user):
         return 'lastname missing'
     elif 'email' not in user:
         return 'email missing'
-    elif 'phoneNumber' not in user:
-        return 'phoneNumber missing'
-    elif 'passportUrl' not in user:
-        return 'passportUrl missing'
-    elif 'isAdmin' not in user:
-        return 'isAdmin missing'
-    elif 'idNo' not in user:
-        return 'idNo missing'
+    elif 'phone_number' not in user:
+        return 'phone_number missing'
+    elif 'passport_url' not in user:
+        return 'passport_url missing'
+    elif 'is_admin' not in user:
+        return 'is_admin missing'
+    elif 'id_no' not in user:
+        return 'id_no missing'
     elif 'username' not in user:
         return 'username missing'
     elif 'password' not in user:
@@ -156,18 +154,18 @@ def validateKeysInUser(user):
     else:
         return 'ok'
 
-def validateValueInUser(user):
+def validate_value_in_user_data(user):
     if not user['firstname'] or len(user['firstname']) < 3:
         return 'firstname missing.\nFirstname must be longer than 2 characters'
     elif not user['lastname'] or len(user['lastname']) < 3:
         return 'lastname missing.\nLastname must be longer than 2 characters'
     elif not user['email'] or len(user['email']) < 3:
         return 'Invalid email.\nEmail must be longer than 2 characters and must contain a @ symbol'
-    elif not user['phoneNumber'] or len(user['phoneNumber']) < 10:
-        return 'Invalid phoneNumber.\nId No must be 10 characters or longer'
-    elif not user['passportUrl'] or len(user['passportUrl']) < 3:
-        return 'Invalid passportUrl.\nId No must be longer than 2 characters'
-    elif not user['idNo'] or len(user['idNo']) < 3:
+    elif not user['phone_number'] or len(user['phone_number']) < 10:
+        return 'Invalid phone_number.\nId No must be 10 characters or longer'
+    elif not user['passport_url'] or len(user['passport_url']) < 3:
+        return 'Invalid passport_url.\nId No must be longer than 2 characters'
+    elif not user['id_no'] or len(user['id_no']) < 3:
         return 'Invalid Id No.\nId No must be longer than 2 characters'
     elif not user['username'] or len(user['username']) < 3:
         return 'Invalid username.\nUsername must be longer than 2 characters'
@@ -176,13 +174,13 @@ def validateValueInUser(user):
     else:
         return 'ok'
 
-def validateUserInputType(user):
-    if not user['phoneNumber'].isdigit():
-        return 'phoneNumber must be a number'
-    elif not isinstance(user['isAdmin'], bool):
-        return 'isAdmin must be a boolean'
-    elif not user['idNo'].isdigit():
-        return 'idNo must be a number'
+def validate_user_input_type(user):
+    if not user['phone_number'].isdigit():
+        return 'phone_number must be a number'
+    elif not isinstance(user['is_admin'], bool):
+        return 'is_admin must be a boolean'
+    elif not user['id_no'].isdigit():
+        return 'id_no must be a number'
     else:
         return 'ok'
 

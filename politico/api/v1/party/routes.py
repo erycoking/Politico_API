@@ -1,9 +1,9 @@
 from flask import Blueprint, request, make_response, jsonify
-from politico.api.v1.party.modal import partyTable
+from politico.api.v1.party.modal import PartyTable
 
 party = Blueprint('party', __name__)
 
-party_table = partyTable()
+party_table = PartyTable()
 
 @party.route('/parties', methods = ['GET'])
 def get_parties():
@@ -35,16 +35,16 @@ def add_party():
     msg = validateKeysInParty(party_data)
     if msg != 'ok':
         return make_response(jsonify({
-            'status': 406,
+            'status': 400,
             'error': msg
-        }), 406)
+        }), 400)
     
     msg1 = validateValueInParty(party_data)
     if msg1 != 'ok':
         return make_response(jsonify({
-            'status': 406,
+            'status': 400,
             'error': msg1
-        }), 406)
+        }), 400)
 
     party_exists = party_table.get_single_party_by_name(party_data['name'])
     if not party_exists:
@@ -66,16 +66,16 @@ def update_party(id):
     msg = validateKeysInParty(party_data)
     if msg != 'ok':
         return make_response(jsonify({
-            'status': 406,
+            'status': 400,
             'error': msg
-        }), 406)
+        }), 400)
     
     msg1 = validateValueInParty(party_data)
     if msg1 != 'ok':
         return make_response(jsonify({
-            'status': 406,
+            'status': 400,
             'error': msg1
-        }), 406)
+        }), 400)
 
     existing_party = party_table.get_single_party(id)
     if not existing_party:
@@ -86,9 +86,9 @@ def update_party(id):
     else:
         updated_party = party_table.update_party(id, party_data)
         return make_response(jsonify({
-            'status': 202, 
+            'status': 200, 
             'data': [updated_party]
-        }), 202)
+        }), 200)
     
 @party.route('/parties/<int:id>', methods=['DELETE'])
 def delete_party(id):
@@ -101,11 +101,11 @@ def delete_party(id):
     else:
         if party_table.delete_party(id):
             return make_response(jsonify({
-                'status': 202, 
+                'status': 200, 
                 'data' : {
                     'message' : 'Party successfully deleted'
                 }
-            }), 202)
+            }), 200)
         else:
             return make_response(jsonify({
                 'status': 500, 
@@ -120,10 +120,10 @@ def validateKeysInParty(Party):
         return 'No Party found'
     elif 'name' not in Party:
         return 'name missing'
-    elif 'hqAddress' not in Party:
-        return 'hqAddress missing'
-    elif 'logoUrl' not in Party:
-        return 'logoUrl missing'
+    elif 'hq_address' not in Party:
+        return 'hq_address missing'
+    elif 'logo_url' not in Party:
+        return 'logo_url missing'
     else:
         return 'ok'
 
@@ -131,9 +131,9 @@ def validateValueInParty(Party):
     # function for validating party input values 
     if not Party['name'] or len(Party['name']) < 3:
         return 'Invalid name.\nName must be longer than 2 characters'
-    elif not Party['hqAddress'] or len(Party['hqAddress']) < 3:
-        return 'Invalid hqAddress.\nHqAddress must be longer than 2 characters'
-    elif not Party['logoUrl'] or len(Party['logoUrl']) < 3:
-        return 'Invalid logoUrl.\nLogoUrl must be longer than 2 characters'
+    elif not Party['hq_address'] or len(Party['hq_address']) < 3:
+        return 'Invalid hq_address.\nhq_address must be longer than 2 characters'
+    elif not Party['logo_url'] or len(Party['logo_url']) < 3:
+        return 'Invalid logo_url.\nlogo_url must be longer than 2 characters'
     else:
         return 'ok'
