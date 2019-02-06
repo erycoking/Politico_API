@@ -121,9 +121,7 @@ class UserTable:
         pass
 
     # stores a list of users
-    users = [
-        User(1,'Erick', 'Lomunyak', 'Loningo', 'erycoking360@gmail.com', '0712345678', 'file/passports/passport1.png', True, 123456789, 'erycoking', 'password')
-    ]
+    users = []
 
     next_id = len(users) + 1
 

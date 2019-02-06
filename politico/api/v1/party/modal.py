@@ -46,9 +46,7 @@ class Party:
 class PartyTable:
     """ acts as a table for storing parties and their related information"""
 
-    parties = [
-        Party(1, 'ygb', 'Westlands, Nairobi', 'logo/logo.jpg')
-    ]
+    parties = []
 
     next_id = len(parties) + 1
 
