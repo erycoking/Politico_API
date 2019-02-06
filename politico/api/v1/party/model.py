@@ -1,5 +1,5 @@
 """
-    contains the class for party modal
+    contains the class for party model
 """
 
 class Party:

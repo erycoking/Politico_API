@@ -81,12 +81,9 @@ class User:
     @property
     def full_name(self):
         """full_name getter"""
+        if self.othername == "":
+            return '{} {}'.format(self.firstname, self.lastname)
         return '{} {} {}'.format(self.firstname, self.othername, self.lastname)
-
-    @full_name.setter
-    def full_name(self, full_name):
-        """full_name setter"""
-        self.firstname, self.othername, self.lastname = full_name.split(' ')
 
     @property
     def user_data(self):
