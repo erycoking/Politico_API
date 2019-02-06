@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/erycoking/Politico_API.svg?branch=develop)](https://travis-ci.org/erycoking/Politico_API)
 
 ## Run in Postman
-https://app.getpostman.com/run-collection/ce5fa5121eb851f81114
+https://dl.pstmn.io/download/latest/linux64
 
 ### Features
 
