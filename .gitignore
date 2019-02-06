@@ -1,3 +1,4 @@
 # Ignore all virtual environment files
 venv/
 .vscode/
+*.pyc
