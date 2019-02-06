@@ -158,6 +158,13 @@ class User:
         user_data['password'] = self.password
         return user_data
 
+    @property
+    def user_patch(self):
+        user_patch = {}
+        user_patch['id'] = self.id
+        user_patch['fullname'] = self.fullName
+        return user_patch
+
 
 """Acts as a table for storing users """
 class userTable:
@@ -186,13 +193,13 @@ class userTable:
         #  gets a single user that matches the user id
         for person in self.users:
             if person.id == int(id):
-                return person.user_data
+                return person
 
     def get_user_with_email(self, email):
         #  gets a single user that matches the user id
         for person in self.users:
             if person.email == str(email):
-                return person.user_data
+                return person
 
 
     def add_user(self, user_data):
@@ -211,13 +218,13 @@ class userTable:
             user_data['password']
         )
         self.users.append(new_user)
-        return new_user.user_data
+        return new_user.user_patch
 
     def update_user(self, id, user_data):
         # add a new user to the users list
 
         for i in range(len(self.users)):
-            if self.users[i].id == id:
+            if self.users[i].id == int(id):
                 print('match found')
                 self.users[i].firstname = user_data['firstname']
                 self.users[i].lastname = user_data['lastname']
@@ -229,15 +236,14 @@ class userTable:
                 self.users[i].idNo = user_data['idNo']
                 self.users[i].username = user_data['username']
                 self.users[i].password = bcrypt.hashpw(user_data['password'].encode('base64'), bcrypt.gensalt())
-                print('updated')
-                break
+                return self.users[i].user_patch
 
-        return self.get_user_with_id(id)
+        
 
-    def delete_user(self, user):
+    def delete_user(self, id):
         # deletes user in the user list
         for i in range(len(self.users)):
-            if self.users[i].id == int(user['id']):
+            if self.users[i].id == int(id):
                 del self.users[i]
                 return True
         

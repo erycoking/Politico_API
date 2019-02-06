@@ -18,13 +18,13 @@ def get_single_user(id):
     if user != None:
         return make_response(jsonify({
             'status': 200, 
-            'data': [user]
+            'data': [user.user_data]
         }), 200)
     else:
         return make_response(jsonify({
             'status': 404, 
             'error': 'No user with id:{} was found'.format(id)
-        }))
+        }), 404)
 
 @user.route('/users', methods=['POST'])
 def addUser():
@@ -59,9 +59,9 @@ def addUser():
         }), 201)
     else:
         return make_response(jsonify({
-            'status': 406,
+            'status': 409,
             'error': 'user with email::{} already exists!!!'.format(user_data['email'])
-        }), 406)
+        }), 409)
 
 
 @user.route('/users/<id>', methods=['PATCH'])
@@ -92,37 +92,45 @@ def update(id):
     print(user)
     if not user:
         return make_response(jsonify({
-            'status': 406, 
+            'status': 404, 
             'error': 'No user with id:{} was found'.format(id)
-        }), 406)
+        }), 404)
     else:
         updated_user = user_table.update_user(id, user_data)
-        print('updated****')
-        return make_response(jsonify({
-            'status': 201,
-            'data': [updated_user]
-        }), 201)
+        if not updated_user:
+            return make_response(jsonify({
+                'status': 500, 
+                'error' : 'Could not update user with id:{}'.format(id)
+            }), 500)
+        else:
+            return make_response(jsonify({
+                'status': 202,
+                'data': [updated_user]
+            }), 202)
         
 
 @user.route('/users/<id>', methods=['DELETE'])
 def delete(id): 
     user = user_table.get_user_with_id(id)
-    print(user)
     if user:
-        print('**deleting**')
-        if user_table.delete_user(user):
+        if user_table.delete_user(id):
             print('**deleted**')
             return make_response(jsonify({
-                'status': 201,
+                'status': 202,
                 'data': {
                     'message': 'user successfully deleted'
                 }
             }), 202)
+        else:
+            return make_response(jsonify({
+                'status': 500, 
+                'error' : 'Could not delete user with id:{}'.format(id)
+            }), 500)
     else:
         return make_response(jsonify({
-            'status': 406, 
+            'status': 404, 
             'error': 'No user with id:{} was found'.format(id)
-        }), 406)
+        }), 404)
 
 def validateKeysInUser(user):
     if not user:
