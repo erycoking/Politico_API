@@ -1,6 +1,7 @@
 # Politico_API
 ## Introduction
 [![Build Status](https://travis-ci.org/erycoking/Politico_API.svg?branch=develop)](https://travis-ci.org/erycoking/Politico_API)
+[![Maintainability](https://api.codeclimate.com/v1/badges/46f93969162ab80fd0c4/maintainability)](https://codeclimate.com/github/erycoking/Politico_API/maintainability)
 
 ## Run in Postman
 https://dl.pstmn.io/download/latest/linux64
