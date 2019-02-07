@@ -36,7 +36,20 @@ def get_all_offices():
         'status': 200, 
         'data': offices
     }), 200)
-    
+
+@office.route('/offices/<int:id>', methods=['GET'])
+def get_single_office(id):
+    office = office_table.get_single_office(id)
+    if not office:
+        return make_response(jsonify({
+            'status': 404,
+            'error': 'No office with id:{} found'.format(id)
+        }), 404)
+    else:
+        return make_response(jsonify({
+            'status': 200,
+            'data': [office.office_data]
+        }))
 
 
 def validate_office_data(office):
