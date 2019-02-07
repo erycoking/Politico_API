@@ -1,5 +1,5 @@
 from flask import Blueprint, make_response, request, jsonify
-from politico.api.v1.user.modal import UserTable
+from politico.api.v1.user.model import UserTable
 
 user = Blueprint('user', __name__)
 

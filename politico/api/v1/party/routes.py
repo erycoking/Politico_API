@@ -1,5 +1,5 @@
 from flask import Blueprint, request, make_response, jsonify
-from politico.api.v1.party.modal import PartyTable
+from politico.api.v1.party.model import PartyTable
 
 party = Blueprint('party', __name__)
 
