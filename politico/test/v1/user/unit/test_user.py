@@ -35,6 +35,24 @@ def user_data():
     }
     return user_data
 
+# creating test data
+@pytest.fixture(scope='module')
+def user_data_2():
+    """test data"""
+    user_data = {
+        "email": "erycoking@gmail.com",
+        "firstname": "mike",
+        "id_no": "12345608",
+        "is_admin": True,
+        "lastname": "rozay",
+        "othername": "",
+        "passport_url": "file/passports/passport1.png",
+        "phone_number": "0712345678", 
+        "username":"baller",
+        "password":"password"
+    }
+    return user_data
+
 def test_add_user(user_data):
     """testing add_user method"""
     new_user_data = user_table.add_user(user_data)
@@ -51,15 +69,17 @@ def test_get_user_with_email(user_data):
     retrived_user = user_table.get_user_with_email(user_data['email'])
     assert retrived_user.lastname == 'rozay'
 
-def test_update_user(user_data):
+def test_update_user(user_data_2):
     """testing update_user method"""
-    updated_user = user_table.update_user(1, user_data)
-    assert updated_user['full_name'] == 'king rozay'
+    updated_user = user_table.update_user(1, user_data_2)
+    assert updated_user['full_name'] == 'mike rozay'
+    assert updated_user['id'] == 1
 
 def test_get_all_users(user_data):
     """testing get_all_users method"""
     retrieved_users = user_table.get_all_users()
-    assert retrieved_users[0]['firstname'] == 'king'
+    assert retrieved_users[0]['firstname'] == 'mike'
+    assert len(retrieved_users) == 1
 
 def test_delete_user():
     """testing delete_user method"""
