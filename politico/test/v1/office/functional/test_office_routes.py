@@ -30,3 +30,10 @@ def test_add_office_route(test_client):
         office_resp = create_office(client)
         assert office_resp is not None
 
+def test_get_all_offices(test_client):
+    with test_client as client:
+        create_office(client)
+        res = client.get(prefix+'/offices')
+        res_data = res.get_json()
+        assert len(res_data['data']) == 1
+

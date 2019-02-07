@@ -29,6 +29,15 @@ def create_office():
             'data': [created_office.office_data]
         }), 201)
 
+@office.route('/offices', methods=['GET'])
+def get_all_offices():
+    offices = office_table.get_all_offices()
+    return make_response(jsonify({
+        'status': 200, 
+        'data': offices
+    }), 200)
+    
+
 
 def validate_office_data(office):
     if not office:
