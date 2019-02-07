@@ -49,6 +49,29 @@ def get_single_office(id):
         return make_response(jsonify({
             'status': 200,
             'data': [office.office_data]
+        }), 200)
+
+@office.route('/offices/<int:id>', methods=['PATCH'])
+def update_office(id):
+    office_data = request.get_json()
+    office = office_table.get_single_office(id)
+    if not office:
+        return make_response(jsonify({
+            'status': 404,
+            'error': 'No office with id:{} found'.format(id)
+        }), 404)
+    
+    msg = validate_office_data(office_data)
+    if msg != 'ok':
+        return make_response(jsonify({
+            'status': 400,
+            'error': msg
+        }))
+    else:
+        updated_office = office_table.update_office(id, office_data)
+        return make_response(jsonify({
+            'status': 400,
+            'data': [updated_office.office_data]
         }))
 
 
