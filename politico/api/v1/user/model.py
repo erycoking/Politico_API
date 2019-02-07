@@ -114,15 +114,13 @@ class User:
 class UserTable:
     """User table class"""
 
-    def __init__(self):
-        pass
-
     # stores a list of users
     users = []
 
     next_id = len(users) + 1
 
     def get_all_users(self):
+        # returns all users
         all_users = []
         for person in self.users:
             all_users.append(person.user_data)
@@ -164,7 +162,6 @@ class UserTable:
 
     def update_user(self, id, user_data):
         # add a new user to the users list
-
         for i in range(len(self.users)):
             if self.users[i].id == int(id):
                 self.users[i].firstname = user_data['firstname']
