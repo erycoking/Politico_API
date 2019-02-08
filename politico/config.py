@@ -3,6 +3,9 @@
 # import flask
 from flask import Flask
 
+# configuration
+from instances.init import config_environment
+
 # import user blueprint
 from politico.api.v1.user.routes import user
 
@@ -14,8 +17,12 @@ from politico.api.v1.office.route import office
 
 
 def create_app():
+
+    env = 'production'
+
     # create the app
     app = Flask(__name__)
+    app.config.from_object(config_environment[env])
 
     # register user blueprint
     app.register_blueprint(user, url_prefix='/api/v1')
