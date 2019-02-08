@@ -9,7 +9,7 @@ install:
 # command to run tests
 script:
   - pytest
+  - pytest --cov=app
 
-# command to run in virtual environment
-virtualenv:
-  system_site_packages: true
+after_success:
+  - coveralls
