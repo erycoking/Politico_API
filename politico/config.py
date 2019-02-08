@@ -18,7 +18,7 @@ from politico.api.v1.office.route import office
 
 def create_app():
 
-    env = 'production'
+    env = 'development'
 
     # create the app
     app = Flask(__name__)
