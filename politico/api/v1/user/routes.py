@@ -1,6 +1,7 @@
 from flask import Blueprint, make_response, request, jsonify
 from politico.api.v1.user.model import UserTable
 
+
 user = Blueprint('user', __name__)
 
 user_table = UserTable()
@@ -12,7 +13,7 @@ def get_user():
         'data': user_table.get_all_users()
     }), 200)
 
-@user.route('/users/<id>', methods=['GET'])
+@user.route('/users/<int:id>', methods=['GET'])
 def get_single_user(id):    
     user = user_table.get_user_with_id(id)
     if user != None:
@@ -64,7 +65,7 @@ def addUser():
         }), 409)
 
 
-@user.route('/users/<id>', methods=['PATCH'])
+@user.route('/users/<int:id>', methods=['PATCH'])
 def update(id):
     user_data = request.get_json()
     msg = validate_keys_in_user_data(user_data)
@@ -98,9 +99,9 @@ def update(id):
         updated_user = user_table.update_user(id, user_data)
         if not updated_user:
             return make_response(jsonify({
-                'status': 500, 
+                'status': 400, 
                 'error' : 'Could not update user with id:{}'.format(id)
-            }), 500)
+            }), 400)
         else:
             return make_response(jsonify({
                 'status': 200,
@@ -121,7 +122,7 @@ def delete(id):
             }), 200)
         else:
             return make_response(jsonify({
-                'status': 500, 
+                'status': 400, 
                 'error' : 'Could not delete user with id:{}'.format(id)
             }), 500)
     else:

@@ -58,9 +58,9 @@ def test_add_user(test_client):
         assert response.status_code == 201
         data  = response.get_json()
         print(data)
-        assert b'data' in data
-        assert b'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert b'full_name' in data['data'][0] and data['data'][0]['full_name'] == 'king rozay'
+        assert 'data' in data
+        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
+        assert 'full_name' in data['data'][0] and data['data'][0]['full_name'] == 'king rozay'
 
 def test_get_single_user(test_client):
     """A test for getting a single user"""
@@ -70,9 +70,9 @@ def test_get_single_user(test_client):
         assert response.status_code == 200
         data  = response.get_json()
         print(data)
-        assert b'data' in data
-        assert b'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert b'firstname' in data['data'][0] and data['data'][0]['firstname'] == 'king'
+        assert 'data' in data
+        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
+        assert 'firstname' in data['data'][0] and data['data'][0]['firstname'] == 'king'
 
 def test_update_user(test_client):
     """A test for getting a single user"""
@@ -81,9 +81,9 @@ def test_update_user(test_client):
         assert response.status_code == 200
         data  = response.get_json()
         print(data)
-        assert b'data' in data
-        assert b'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert b'full_name' in data['data'][0] and data['data'][0]['full_name'] == 'bigfish rozay'
+        assert 'data' in data
+        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
+        assert 'full_name' in data['data'][0] and data['data'][0]['full_name'] == 'bigfish rozay'
 
 def test_getting_all_users(test_client):
     """A test for getting all user"""
@@ -93,9 +93,9 @@ def test_getting_all_users(test_client):
         assert response.status_code == 200
         data  = response.get_json()
         print(data)
-        assert b'data' in data
-        assert b'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert b'firstname' in data['data'][0] and data['data'][0]['firstname'] == 'bigfish'
+        assert 'data' in data
+        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
+        assert 'firstname' in data['data'][0] and data['data'][0]['firstname'] == 'bigfish'
 
 def test_delete_user(test_client):
     """A test for deleting a single user"""
@@ -105,5 +105,5 @@ def test_delete_user(test_client):
         assert response.status_code == 200
         data  = response.get_json()
         print(data)
-        assert b'data' in data
-        assert b'message' in data['data'] and data['data']['message'] == 'user successfully deleted'
+        assert 'data' in data
+        assert 'message' in data['data'] and data['data']['message'] == 'user successfully deleted'

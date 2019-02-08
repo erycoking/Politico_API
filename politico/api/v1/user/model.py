@@ -8,104 +8,159 @@ class User:
 
     def __init__(self, id, firstname, lastname, othername, email, phone_number, passport_url, is_admin, id_no, username, password):
         """Constructor"""
-        self.id = id
-        self.firstname = firstname
-        self.lastname = lastname
-        self.othername = othername
-        self.email = email
-        self.phone_number = phone_number
-        self.passport_url = passport_url
-        self.is_admin = is_admin
-        self.id_no = id_no
-        self.username = username
-        self.password = bcrypt.hashpw(password.encode('base64'), bcrypt.gensalt())
+        self._id = id
+        self._firstname = firstname
+        self._lastname = lastname
+        self._othername = othername
+        self._email = email
+        self._phone_number = phone_number
+        self._passport_url = passport_url
+        self._is_admin = is_admin
+        self._id_no = id_no
+        self._username = username
+        self._password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
 
     @property
     def id(self):
         """id getter"""
-        return self.id
+        return self._id
+
+    @id.setter
+    def id(self, id):
+        # id setter
+        self._id = id
 
     @property
     def firstname(self):
         """firstname getter"""
-        return self.firstname
+        return self._firstname
+
+    @firstname.setter
+    def firstname(self, fname):
+        # firstname setter
+        self._firstname = fname
 
     @property
     def lastname(self):
         """lastname getter"""
-        return self.lastname
+        return self._lastname
+
+    @lastname.setter
+    def lastname(self, lname):
+        # lastname setter
+        self._lastname = lname
 
 
     @property
     def othername(self):
         """othername getter"""
-        return self.othername
+        return self._othername
+
+    @othername.setter
+    def othername(self, oname):
+        # othername setter
+        self._othername = oname
 
     @property
     def email(self):
         """email getter"""
-        return self.email
+        return self._email
+
+    @email.setter
+    def email(self, email):
+        # email setter
+        self._email = email
 
     @property
     def phone_number(self):
         """phone_number getter"""
-        return self.phone_number
+        return self._phone_number
+
+    @phone_number.setter
+    def phone_number(self, phone):
+        # phone_number setter
+        self._phone_number = phone
 
 
     @property
     def passport_url(self):
         """passport_url getter"""
-        return self.passport_url
+        return self._passport_url
+
+    @passport_url.setter
+    def passport_url(self, passport):
+        # passport_url setter
+        self._passport_url = passport
 
     @property
     def is_admin(self):
         """is_admin getter"""
-        return self.is_admin
+        return self._is_admin
+
+    @is_admin.setter
+    def is_admin(self, admin):
+        # is_admin setter
+        self._is_admin = admin
 
     @property
     def id_no(self):
         """id_no getter"""
-        return self.id_no
+        return self._id_no
+
+    @id_no.setter
+    def id_no(self, id):
+        # id_no setter
+        self._id_no = id
 
     @property
     def username(self):
         """username getter"""
-        return self.username
+        return self._username
+
+    @username.setter
+    def username(self, name):
+        # username setter
+        self._username = name
 
     @property
     def password(self):
         """password getter"""
-        return self.password
+        return self._password
+
+    @password.setter
+    def password(self, passwd):
+        # password setter
+        self._password = passwd
 
     @property
     def full_name(self):
         """full_name getter"""
-        if self.othername == "":
-            return '{} {}'.format(self.firstname, self.lastname)
-        return '{} {} {}'.format(self.firstname, self.othername, self.lastname)
+        if self._othername == "":
+            return '{} {}'.format(self._firstname, self._lastname)
+        return '{} {} {}'.format(self._firstname, self._othername, self._lastname)
 
     @property
     def user_data(self):
         """gets user data"""
         user_data = {}
-        user_data['id'] = self.id
-        user_data['firstname'] = self.firstname
-        user_data['lastname'] = self.lastname
-        user_data['othername'] = self.othername
-        user_data['email'] = self.email
-        user_data['phone_number'] = self.phone_number
-        user_data['passport_url'] = self.passport_url
-        user_data['is_admin'] = self.is_admin
-        user_data['id_no'] = self.id_no
-        user_data['username'] = self.username
-        user_data['password'] = self.password
+        user_data['id'] = self._id
+        user_data['firstname'] = self._firstname
+        user_data['lastname'] = self._lastname
+        user_data['othername'] = self._othername
+        user_data['email'] = self._email
+        user_data['phone_number'] = self._phone_number
+        user_data['passport_url'] = self._passport_url
+        user_data['is_admin'] = self._is_admin
+        user_data['id_no'] = self._id_no
+        user_data['username'] = self._username
+        user_data['password'] = self._password
         return user_data
 
     @property
     def user_data_2(self):
         user_data_2 = {}
-        user_data_2['id'] = self.id
+        user_data_2['id'] = self._id
         user_data_2['full_name'] = self.full_name
         return user_data_2
 
@@ -173,7 +228,7 @@ class UserTable:
                 self.users[i].is_admin = user_data['is_admin']
                 self.users[i].id_no = user_data['id_no']
                 self.users[i].username = user_data['username']
-                self.users[i].password = bcrypt.hashpw(user_data['password'].encode('base64'), bcrypt.gensalt())
+                self.users[i].password = bcrypt.hashpw(user_data['password'].encode(), bcrypt.gensalt())
                 return self.users[i].user_data_2
 
         
