@@ -9,7 +9,7 @@ install:
 # command to run tests
 script:
   - pytest
-  - pytest --cov=app
+  - pytest --cov=politico
 
 after_success:
   - coveralls
