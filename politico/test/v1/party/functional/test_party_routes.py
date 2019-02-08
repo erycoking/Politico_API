@@ -43,9 +43,9 @@ def test_add_party(test_client):
         assert response.status_code == 201
         data  = response.get_json()
         print(data)
-        assert b'data' in data
-        assert b'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert b'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
+        assert 'data' in data
+        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
+        assert 'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
 
 def test_get_single_party(test_client):
     """A test for getting a single party"""
@@ -55,9 +55,9 @@ def test_get_single_party(test_client):
         assert response.status_code == 200
         data  = response.get_json()
         print(data)
-        assert b'data' in data
-        assert b'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert b'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
+        assert 'data' in data
+        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
+        assert 'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
 
 def test_update_party(test_client):
     """A test for getting a single party"""
@@ -66,9 +66,9 @@ def test_update_party(test_client):
         assert response.status_code == 200
         data  = response.get_json()
         print(data)
-        assert b'data' in data
-        assert b'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert b'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
+        assert 'data' in data
+        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
+        assert 'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
 
 def test_getting_all_partys(test_client):
     """A test for getting all party"""
@@ -78,9 +78,9 @@ def test_getting_all_partys(test_client):
         assert response.status_code == 200
         data  = response.get_json()
         print(data)
-        assert b'data' in data
-        assert b'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert b'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
+        assert 'data' in data
+        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
+        assert 'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
 
 def test_delete_party(test_client):
     """A test for deleting a single party"""
@@ -90,5 +90,5 @@ def test_delete_party(test_client):
         assert response.status_code == 200
         data  = response.get_json()
         print(data)
-        assert b'data' in data
-        assert b'message' in data['data'] and data['data']['message'] == 'Party successfully deleted'
+        assert 'data' in data
+        assert 'message' in data['data'] and data['data']['message'] == 'Party successfully deleted'
