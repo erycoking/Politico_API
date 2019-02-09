@@ -18,11 +18,8 @@ from politico.api.v1.office.route import office
 
 def create_app():
 
-    env = 'development'
-
     # create the app
     app = Flask(__name__)
-    app.config.from_object(config_environment[env])
 
     # register user blueprint
     app.register_blueprint(user, url_prefix='/api/v1')
