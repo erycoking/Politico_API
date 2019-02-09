@@ -3,9 +3,6 @@
 # import flask
 from flask import Flask
 
-# configuration
-from instances.init import config_environment
-
 # import user blueprint
 from politico.api.v1.user.routes import user
 
