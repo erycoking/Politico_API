@@ -60,11 +60,9 @@ class Candidate:
 
 
 class CandidateTable:
-    """Acts as table for storing candidate models"""
+    """Candidate Table"""
 
-    # list of candidate in the candidate table
     candidates = []
-
     next_id = len(candidates) + 1
 
     def get_all_candidates(self):

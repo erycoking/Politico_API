@@ -76,9 +76,9 @@ class Votes:
 
 
 class VotesTable:
-    """Acts as a table for storing votes"""
+    """Vote Table"""
 
-    # list of all votes cast
+    # votes cast
     votes = []
 
     next_id = len(votes) + 1
