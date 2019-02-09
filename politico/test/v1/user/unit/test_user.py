@@ -74,12 +74,16 @@ def test_update_user(user_data_2):
     updated_user = user_table.update_user(1, user_data_2)
     assert updated_user['full_name'] == 'mike rozay'
     assert updated_user['id'] == 1
+    assert len(user_table.get_all_users()) == 1
 
 def test_get_all_users(user_data):
     """testing get_all_users method"""
+    user_table.add_user(user_data)
     retrieved_users = user_table.get_all_users()
+    print(retrieved_users)
     assert retrieved_users[0]['firstname'] == 'mike'
-    assert len(retrieved_users) == 1
+    assert len(retrieved_users) == 2
+    assert retrieved_users[1]['id'] == 1
 
 def test_delete_user():
     """testing delete_user method"""

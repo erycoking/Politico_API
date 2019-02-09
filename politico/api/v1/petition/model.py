@@ -4,7 +4,7 @@
 import datetime
 
 class Petition:
-    """Vote model"""
+    """Petition model"""
 
     def __init__(self, id, created_by, office, body):
         # constructor

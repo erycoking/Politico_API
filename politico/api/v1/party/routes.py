@@ -130,10 +130,10 @@ def validateKeysInParty(Party):
 def validateValueInParty(Party):
     # function for validating party input values 
     if not Party['name'] or len(Party['name']) < 3:
-        return 'Invalid name.\nName must be longer than 2 characters'
+        return 'Invalid name.\nName should not be less than 3 characters'
     elif not Party['hq_address'] or len(Party['hq_address']) < 3:
-        return 'Invalid hq_address.\nhq_address must be longer than 2 characters'
+        return 'Invalid hq_address.\nhq_address cannot be less than 3 characters'
     elif not Party['logo_url'] or len(Party['logo_url']) < 3:
-        return 'Invalid logo_url.\nlogo_url must be longer than 2 characters'
+        return 'Invalid logo_url.\nPlease give a valid url'
     else:
         return 'ok'
