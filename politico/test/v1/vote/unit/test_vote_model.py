@@ -45,14 +45,13 @@ def test_get_all_votes(vote):
     vote_table.cast_vote(vote)
     all_votes = vote_table.get_all_votes()
     assert all_votes is not None
-    assert len(all_votes) == 2
-    assert all_votes[0]['office'] == 2
-    assert all_votes[1]['office'] == 1
+    assert len(all_votes) == 1
+    assert all_votes[0]['office'] == 1
 
 def test_get_single_vote():
     vote_cast = vote_table.get_single_vote(1)
-    assert vote_cast.created_by == 2
-    assert vote_cast.office == 2
+    assert vote_cast.created_by == 1
+    assert vote_cast.office == 1
    
 def test_delete_vote():
     deleted_vote  = vote_table.delete_vote(1)

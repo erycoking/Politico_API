@@ -70,26 +70,26 @@ class Party:
 class PartyTable:
     """ acts as a table for storing parties and their related information"""
 
-    parties = []
-
+    parties = {}
     next_id = len(parties) + 1
+    prefix = 'party_'
+    next_key = prefix + str(next_id)
 
     def get_all_parties(self):
         # returns all parties
         all_parties = []
-        for party in self.parties:
+        for party in self.parties.values():
             all_parties.append(party.party_data)
         return all_parties
 
     def get_single_party(self, id):
         # gets a single party by id
-        for party in self.parties:
-            if party.id == int(id):
-                return party
+        key = self.prefix + str(id)
+        return self.parties.get(key)
 
     def get_single_party_by_name(self, name):
         # gets a single party by name
-        for party in self.parties:
+        for party in self.parties.values():
             if party.name == name:
                 return party
 
@@ -101,23 +101,25 @@ class PartyTable:
             party_data['hq_address'], 
             party_data['logo_url']
         )
-        self.parties.append(new_party)
+        self.parties[self.next_key] = new_party
         return new_party.party_data_for_updates_and_deletes
 
     def update_party(self, id, party_data):
         # updates party data
-        for i in range(len(self.parties)):
-            if self.parties[i].id == int(id):
-                self.parties[i].name = party_data['name']
-                self.parties[i].hq_address = party_data['hq_address']
-                self.parties[i].logo_url = party_data['logo_url']
-                return self.parties[i].party_data_for_updates_and_deletes
+        part_key = self.prefix + str(id)
+        party = self.parties.get(part_key)
+        party.name = party_data['name']
+        party.hq_address = party_data['hq_address']
+        party.logo_url = party_data['logo_url']
+        self.parties[part_key] = party
+        return party.party_data_for_updates_and_deletes
 
     def delete_party(self, id):
         # deletes a party from the list of parties
-        for i in range(len(self.parties)):
-            if self.parties[i].id == id:
-                del self.parties[i]
-                return True
-
+        party_key = self.prefix + str(id)
+        party = self.parties.get(party_key)
+        if party:
+            del self.parties[party_key]
+            return True
+            
         return False
