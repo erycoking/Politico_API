@@ -1,2 +1,2 @@
-web: gunicorn run:politico
+web: gunicorn run:config
 
