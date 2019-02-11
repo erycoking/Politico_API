@@ -111,17 +111,19 @@ def delete_office(id):
 
 def validate_office_data(office):
     # validates office input
+    msg = None
     if not office:
-        return 'No office data found'
+        msg = 'No office data found'
     elif 'type' not in office:
-        return 'office type missing'
+        msg = 'office type missing'
     elif 'name' not in office:
-        return 'office name missing'
+        msg = 'office name missing'
     elif office['type'] not in ['federal', 'legislative', 'state', 'local_government']:
-        return 'Invalid office type.'
+        msg = 'Invalid office type.'
     elif not isinstance(office['name'], str):
-        return 'Invalid office name. Office name should be made of strings'
+        msg = 'Invalid office name. Office name should be made of strings'
     elif len(office['name']) < 3:
-        return 'Invalid office name. Office name should be greater than 3 characters'
+        msg = 'Invalid office name. Office name should be greater than 3 characters'
     else:
-        return 'ok'
+        msg = 'ok'
+    return msg

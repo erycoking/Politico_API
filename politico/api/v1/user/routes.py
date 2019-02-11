@@ -132,58 +132,64 @@ def delete(id):
         }), 404)
 
 def validate_keys_in_user_data(user):
+    msg = None
     if not user:
-        return 'No user found'
+        msg = 'No user found'
     elif 'firstname' not in user:
-        return 'firstname missing'
+        msg = 'firstname missing'
     elif 'lastname' not in user:
-        return 'lastname missing'
+        msg = 'lastname missing'
     elif 'email' not in user:
-        return 'email missing'
+        msg = 'email missing'
     elif 'phone_number' not in user:
-        return 'phone_number missing'
+        msg = 'phone_number missing'
     elif 'passport_url' not in user:
-        return 'passport_url missing'
+        msg = 'passport_url missing'
     elif 'is_admin' not in user:
-        return 'is_admin missing'
+        msg = 'is_admin missing'
     elif 'id_no' not in user:
-        return 'id_no missing'
+        msg = 'id_no missing'
     elif 'username' not in user:
-        return 'username missing'
+        msg = 'username missing'
     elif 'password' not in user:
-        return 'password missing'
+        msg = 'password missing'
     else:
-        return 'ok'
+        msg = 'ok'
+    return msg
 
 def validate_value_in_user_data(user):
+    msg = None
     if not user['firstname'] or len(user['firstname']) < 3:
-        return 'firstname missing.\nFirstname must be longer than 2 characters'
+        msg = 'firstname missing.\nFirstname must be longer than 2 characters'
     elif not user['lastname'] or len(user['lastname']) < 3:
-        return 'lastname missing.\nLastname must be longer than 2 characters'
+        msg = 'lastname missing.\nLastname must be longer than 2 characters'
     elif not user['email'] or len(user['email']) < 3:
-        return 'Invalid email.\nEmail must be longer than 2 characters and must contain a @ symbol'
+        msg = 'Invalid email.\nEmail must be longer than 2 characters and must contain a @ symbol'
     elif not user['phone_number'] or len(user['phone_number']) < 10:
-        return 'Invalid phone_number.\nId No must be 10 characters or longer'
+        msg = 'Invalid phone_number.\nId No must be 10 characters or longer'
     elif not user['passport_url'] or len(user['passport_url']) < 3:
-        return 'Invalid passport_url.\nId No must be longer than 2 characters'
+        msg = 'Invalid passport_url.\nId No must be longer than 2 characters'
     elif not user['id_no'] or len(user['id_no']) < 3:
-        return 'Invalid Id No.\nId No must be longer than 2 characters'
+        msg = 'Invalid Id No.\nId No must be longer than 2 characters'
     elif not user['username'] or len(user['username']) < 3:
-        return 'Invalid username.\nUsername must be longer than 2 characters'
+        msg = 'Invalid username.\nUsername must be longer than 2 characters'
     elif not user['password'] or len(user['password']) < 3:
-        return 'Invalid password.\nPassword must be longer than 2 characters'
+        msg = 'Invalid password.\nPassword must be longer than 2 characters'
     else:
-        return 'ok'
+        msg = 'ok'
+    return msg
 
 def validate_user_input_type(user):
+    msg = None
     if not user['phone_number'].isdigit():
-        return 'phone_number must be a number'
+        msg = 'phone_number must be a number'
     elif not isinstance(user['is_admin'], bool):
-        return 'is_admin must be a boolean'
+        msg = 'is_admin must be a boolean'
     elif not user['id_no'].isdigit():
-        return 'id_no must be a number'
+        msg = 'id_no must be a number'
     else:
-        return 'ok'
+        msg = 'ok'
+    return msg
 
 
 

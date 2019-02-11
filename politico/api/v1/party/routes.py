@@ -116,24 +116,29 @@ def delete_party(id):
 
 def validateKeysInParty(Party):
     # function for validating party keys
+    msg = None
     if not Party:
-        return 'No Party found'
+        msg = 'No Party found'
     elif 'name' not in Party:
-        return 'name missing'
+        msg = 'name missing'
     elif 'hq_address' not in Party:
-        return 'hq_address missing'
+        msg = 'hq_address missing'
     elif 'logo_url' not in Party:
-        return 'logo_url missing'
+        msg = 'logo_url missing'
     else:
-        return 'ok'
+        msg = 'ok'
+    return msg
 
 def validateValueInParty(Party):
     # function for validating party input values 
+    msg = None
     if not Party['name'] or len(Party['name']) < 3:
-        return 'Invalid name.\nName should not be less than 3 characters'
+        msg = 'Invalid name.\nName should not be less than 3 characters'
     elif not Party['hq_address'] or len(Party['hq_address']) < 3:
-        return 'Invalid hq_address.\nhq_address cannot be less than 3 characters'
+        msg = 'Invalid hq_address.\nhq_address cannot be less than 3 characters'
     elif not Party['logo_url'] or len(Party['logo_url']) < 3:
-        return 'Invalid logo_url.\nPlease give a valid url'
+        msg = 'Invalid logo_url.\nPlease give a valid url'
     else:
-        return 'ok'
+        msg = 'ok'
+
+    return msg

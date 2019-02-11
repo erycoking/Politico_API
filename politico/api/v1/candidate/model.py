@@ -79,10 +79,10 @@ class CandidateTable:
             if cand.id == int(id):
                 return cand
 
-    def get_candidate_by_candidate(self, cand):
+    def get_candidate_by_candidate(self, cand_id):
         # return a single candidate with the specified candidate key
         for cand in self.candidates:
-            if cand.candidate == int(cand):
+            if cand.candidate == int(cand_id):
                 return cand
 
     def add_candidate(self, cand_data):
