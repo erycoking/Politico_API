@@ -57,31 +57,32 @@ def test_add_user(user_data):
     """testing add_user method"""
     new_user_data = user_table.add_user(user_data)
     assert new_user_data['id'] == 1
-    assert new_user_data['full_name'] == 'king rozay'
+    assert new_user_data['firstname'] == 'king'
 
 def test_get_user_with_id(user_data):
     """testing get_user_with_id method"""
-    retrived_user = user_table.get_user_with_id(1)
-    assert retrived_user.lastname == 'rozay'
+    retrived_user = user_table.users.get(1)
+    assert retrived_user['lastname'] == 'rozay'
 
 def test_get_user_with_email(user_data):
     """testing get_user_with_email method"""
     retrived_user = user_table.get_user_with_email(user_data['email'])
-    assert retrived_user.lastname == 'rozay'
+    assert retrived_user['lastname'] == 'rozay'
 
 def test_update_user(user_data_2):
     """testing update_user method"""
     updated_user = user_table.update_user(1, user_data_2)
-    assert updated_user['full_name'] == 'mike rozay'
+    assert updated_user['firstname'] == 'mike'
     assert updated_user['id'] == 1
-    assert len(user_table.get_all_users()) == 1
+    assert len(user_table.users) == 1
 
 def test_get_all_users(user_data):
     """testing get_all_users method"""
     user_table.add_user(user_data)
-    retrieved_users = user_table.get_all_users()
+    retrieved_users = user_table.users
+    first_user = retrieved_users.get(1)
     print(retrieved_users)
-    assert retrieved_users[0]['firstname'] == 'king'
+    assert first_user['firstname'] == 'king'
     assert len(retrieved_users) == 1
 
 def test_delete_user():

@@ -37,12 +37,12 @@ def test_update_petition(petition_data_2):
     assert updated_petition['body'] ==  'election rigging'
 
 def test_get_single_petition():
-    petition = petition_table.get_single_petition(1)
-    assert petition.id ==  1
-    assert petition.body ==  'election rigging'
+    petition = petition_table.petitions.get(1)
+    assert petition['id'] ==  1
+    assert petition['body'] ==  'election rigging'
 
 def test_get_all_petitions():
-    all_petition = petition_table.get_all_petitions()
+    all_petition = petition_table.petitions
     assert all_petition is not None
     assert len(all_petition) == 1
 

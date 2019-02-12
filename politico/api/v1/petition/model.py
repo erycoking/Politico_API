@@ -83,8 +83,6 @@ class PetitionTable:
     # list of petitions
     petitions = {}
     next_id = len(petitions) + 1
-    prefix = 'petition_'
-    next_key = prefix + str(next_id)
 
     def add_petition(self, petition_data):
         # adds a new petition
@@ -94,44 +92,29 @@ class PetitionTable:
             petition_data['office'], 
             petition_data['body']
         )
-        self.petitions[self.next_key] = new_petition
+        self.petitions[self.next_id] = new_petition.petition_data
         return new_petition.petition_data
 
     def update_petition(self, id, petition_data):
         # updates petition data
-        pet_key = self.prefix + str(id)
-        petition = self.petitions.get(pet_key)
-        petition.created_by = petition_data['created_by']
-        petition.office = petition_data['office']
-        petition.body = petition_data['body']
-        self.petitions[pet_key] = petition
-        return petition.petition_data
-
-    def get_all_petitions(self):
-        # returns all petitions
-        all_petitions = []
-        for p in self.petitions.values():
-            all_petitions.append(p.petition_data)
-
-        return all_petitions
-
-        
-    def get_single_petition(self, id):
-        pet_key = self.prefix + str(id)
-        return self.petitions.get(pet_key)
+        petition = self.petitions.get(id)
+        petition['created_by'] = petition_data['created_by']
+        petition['office'] = petition_data['office']
+        petition['body'] = petition_data['body']
+        self.petitions[id] = petition
+        return self.petitions[id]
 
     def get_petition_by_created_by(self, creator):
         for p in self.petitions.values():
-            if p.created_by == int(creator):
+            if p['created_by'] == int(creator):
                 return p
 
 
     def delete_petition(self, id):
         # deletes a petition
-        pet_key = self.prefix + str(id)
-        petition = self.petitions.get(pet_key)
+        petition = self.petitions.get(id)
         if petition:
-            del self.petitions[pet_key]
+            del self.petitions[id]
             return True 
 
         return False

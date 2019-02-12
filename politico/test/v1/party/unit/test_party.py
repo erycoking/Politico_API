@@ -36,13 +36,13 @@ def test_add_user(party_data):
 
 def test_get_user_with_id(party_data):
     """testing get_single_party method"""
-    retrived_party = party_table.get_single_party(1)
-    assert retrived_party.name == 'jubilee'
+    retrived_party = party_table.parties.get(1)
+    assert retrived_party['name'] == 'jubilee'
 
 def test_get_user_with_email(party_data):
     """testing get_single_party_by_name method"""
     retrived_party = party_table.get_single_party_by_name(party_data['name'])
-    assert retrived_party.name == 'jubilee'
+    assert retrived_party.get('name') == 'jubilee'
 
 def test_update_user(party_data):
     """testing update_party method"""
@@ -51,8 +51,9 @@ def test_update_user(party_data):
 
 def test_get_all_users(party_data):
     """testing get_all_parties method"""
-    retrieved_parties = party_table.get_all_parties()
-    assert retrieved_parties[0]['name'] == 'jubilee'
+    retrieved_parties = party_table.parties
+    first_party = retrieved_parties.get(1)
+    assert first_party['name'] == 'jubilee'
 
 def test_delete_user():
     """testing delete_party method"""

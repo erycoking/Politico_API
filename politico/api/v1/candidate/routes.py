@@ -37,9 +37,9 @@ def add_candidate():
 
 
 def validate_candidate_info(cand):
-    user = user_table.get_user_with_id(cand.get('candidate'))
-    office = office_table.get_single_office(cand.get('office'))
-    party = party_table.get_single_party(cand.get('party'))
+    user = user_table.users.get(cand.get('candidate'))
+    office = office_table.offices.get(cand.get('office'))
+    party = party_table.parties.get(cand.get('party'))
     msg = None
     if not cand:
         msg = 'candidate information is required'

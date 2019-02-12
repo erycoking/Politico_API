@@ -10,16 +10,16 @@ user_table = UserTable()
 def get_user():
     return make_response(jsonify({
         'status': 200, 
-        'data': user_table.get_all_users()
+        'data': user_table.users
     }), 200)
 
 @user.route('/users/<int:id>', methods=['GET'])
 def get_single_user(id):    
-    user = user_table.get_user_with_id(id)
+    user = user_table.users.get(id)
     if user != None:
         return make_response(jsonify({
             'status': 200, 
-            'data': [user.user_data]
+            'data': [user]
         }), 200)
     else:
         return make_response(jsonify({
@@ -89,7 +89,7 @@ def update(id):
             'error': msg2
         }), 400)
 
-    user = user_table.get_user_with_id(id)
+    user = user_table.users.get(id)
     if not user:
         return make_response(jsonify({
             'status': 404, 
@@ -109,9 +109,9 @@ def update(id):
             }), 200)
         
 
-@user.route('/users/<id>', methods=['DELETE'])
+@user.route('/users/<int:id>', methods=['DELETE'])
 def delete(id): 
-    user = user_table.get_user_with_id(id)
+    user = user_table.users.get(id)
     if user:
         if user_table.delete_user(id):
             return make_response(jsonify({

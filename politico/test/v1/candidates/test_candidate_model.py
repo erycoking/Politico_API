@@ -35,15 +35,15 @@ def test_update_candidate(cand_data_2):
     assert updated_candidate['office']  == 2
 
 def test_get_all_candidates():
-    all_candidates = cand_table.get_all_candidates()
+    all_candidates = cand_table.candidates
     print(all_candidates)
     assert all_candidates is not None
     assert len(all_candidates) == 1
 
 def test_get_single_candidate():
-    cand = cand_table.get_single_candidate(1)
-    assert cand.id == 1
-    assert cand.office  == 2
+    cand = cand_table.candidates.get(1)
+    assert cand['id'] == 1
+    assert cand['office']  == 2
 
 def test_delete_candidate():
     candidate_deleted = cand_table.delete_candidate(1)

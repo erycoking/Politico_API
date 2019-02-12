@@ -31,7 +31,7 @@ def test_cast_vote(vote):
     assert casted_vote.get('office') == vote.get('office')
     assert casted_vote.get('candidate') == vote.get('candidate')
     assert casted_vote.get('created_by') == vote.get('created_by')
-    assert len(vote_table.get_all_votes()) == 1
+    assert len(vote_table.votes) == 1
 
 def test_update_casted_vote(second_vote):
     updated_vote = vote_table.update_vote(1, second_vote)
@@ -39,19 +39,20 @@ def test_update_casted_vote(second_vote):
     assert updated_vote.get('office') == second_vote.get('office')
     assert updated_vote.get('candidate') == second_vote.get('candidate')
     assert updated_vote.get('created_by') == second_vote.get('created_by')
-    assert len(vote_table.get_all_votes()) == 1
+    assert len(vote_table.votes) == 1
 
 def test_get_all_votes(vote):
     vote_table.cast_vote(vote)
-    all_votes = vote_table.get_all_votes()
+    all_votes = vote_table.votes
+    first_vote = all_votes.get(1)
     assert all_votes is not None
     assert len(all_votes) == 1
-    assert all_votes[0]['office'] == 1
+    assert first_vote['office'] == 1
 
 def test_get_single_vote():
-    vote_cast = vote_table.get_single_vote(1)
-    assert vote_cast.created_by == 1
-    assert vote_cast.office == 1
+    vote_cast = vote_table.votes.get(1)
+    assert vote_cast['created_by'] == 1
+    assert vote_cast['office'] == 1
    
 def test_delete_vote():
     deleted_vote  = vote_table.delete_vote(1)

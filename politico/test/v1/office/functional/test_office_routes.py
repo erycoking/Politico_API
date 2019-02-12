@@ -53,8 +53,11 @@ def test_get_all_offices(test_client):
         res = client.get(prefix+'/offices')
         assert res.status_code == 200
         res_data = res.get_json()
-        assert len(res_data['data']) == 1
-        assert res_data['data'][0]['id'] == 1
+        all_offices = res_data['data']
+        office = all_offices.get('1')
+        print(res_data)
+        assert len(all_offices) == 1
+        assert office['id'] == 1
 
 def test_get_single_office(test_client):
     # tests getting a single office route
