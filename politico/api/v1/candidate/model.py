@@ -62,26 +62,27 @@ class Candidate:
 class CandidateTable:
     """Candidate Table"""
 
-    candidates = []
+    candidates = {}
     next_id = len(candidates) + 1
+    prefix = 'cand_'
+    next_key = 'cand_' + str(next_id)
 
     def get_all_candidates(self):
         # returns a list of all candidates
         all_candidates = []
-        for cand in self.candidates:
+        for cand in self.candidates.values():
             all_candidates.append(cand.candidate_data)
 
         return all_candidates
 
     def get_single_candidate(self, id):
         # return a single candidate with the specified id
-        for cand in self.candidates:
-            if cand.id == int(id):
-                return cand
+        key = self.prefix + str(id)
+        return self.candidates.get(key)
 
     def get_candidate_by_candidate(self, cand_id):
         # return a single candidate with the specified candidate key
-        for cand in self.candidates:
+        for cand in self.candidates.values():
             if cand.candidate == int(cand_id):
                 return cand
 
@@ -93,23 +94,25 @@ class CandidateTable:
             cand_data['party'], 
             cand_data['candidate']
         )
-        self.candidates.append(new_candidate)
+        self.candidates[self.next_key] = new_candidate
         return new_candidate.candidate_data
 
     def update_candidate(self, id, cand_data):
+        key = self.prefix+str(id)
         # updates candidate information 
-        for i in range(len(self.candidates)):
-            if self.candidates[i].id == int(id):
-                self.candidates[i].office = cand_data['office']
-                self.candidates[i].party = cand_data['party']
-                self.candidates[i].candidate = cand_data['candidate']
-                return self.candidates[i].candidate_data
+        candidate = self.candidates.get(key)
+        candidate.office = cand_data['office']
+        candidate.party = cand_data['party']
+        candidate.candidate = cand_data['candidate']
+        self.candidates[key] = candidate
+        return candidate.candidate_data
+
 
     def delete_candidate(self, id):
         # deletes a candidate
-        for i in range(len(self.candidates)):
-            if self.candidates[i].id == int(id):
-                del self.candidates[i]
-                return True
-
+        key = 'cand_'+str(id)
+        candidate = self.candidates[key]
+        if candidate:
+            del self.candidates[key]
+            return True
         return False 

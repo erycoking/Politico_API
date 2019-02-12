@@ -81,9 +81,10 @@ class PetitionTable:
     """Acts as a table for storing petitions"""
 
     # list of petitions
-    petitions = []
-
+    petitions = {}
     next_id = len(petitions) + 1
+    prefix = 'petition_'
+    next_key = prefix + str(next_id)
 
     def add_petition(self, petition_data):
         # adds a new petition
@@ -93,44 +94,45 @@ class PetitionTable:
             petition_data['office'], 
             petition_data['body']
         )
-        self.petitions.append(new_petition)
+        self.petitions[self.next_key] = new_petition
         return new_petition.petition_data
 
     def update_petition(self, id, petition_data):
         # updates petition data
-        for i in range(len(self.petitions)):
-            if self.petitions[i].id == int(id):
-                self.petitions[i].created_by = petition_data['created_by']
-                self.petitions[i].office = petition_data['office']
-                self.petitions[i].body = petition_data['body']
-                return self.petitions[i].petition_data
+        pet_key = self.prefix + str(id)
+        petition = self.petitions.get(pet_key)
+        petition.created_by = petition_data['created_by']
+        petition.office = petition_data['office']
+        petition.body = petition_data['body']
+        self.petitions[pet_key] = petition
+        return petition.petition_data
 
     def get_all_petitions(self):
         # returns all petitions
         all_petitions = []
-        for p in self.petitions:
+        for p in self.petitions.values():
             all_petitions.append(p.petition_data)
 
         return all_petitions
 
         
     def get_single_petition(self, id):
-        for p in self.petitions:
-            if p.id == int(id):
-                return p
+        pet_key = self.prefix + str(id)
+        return self.petitions.get(pet_key)
 
     def get_petition_by_created_by(self, creator):
-        for p in self.petitions:
+        for p in self.petitions.values():
             if p.created_by == int(creator):
                 return p
 
 
     def delete_petition(self, id):
         # deletes a petition
-        for i in range(len(self.petitions)):
-            if self.petitions[i].id == int(id):
-                del self.petitions[i]
-                return True
+        pet_key = self.prefix + str(id)
+        petition = self.petitions.get(pet_key)
+        if petition:
+            del self.petitions[pet_key]
+            return True 
 
         return False
 

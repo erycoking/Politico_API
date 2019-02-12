@@ -81,9 +81,8 @@ def test_get_all_users(user_data):
     user_table.add_user(user_data)
     retrieved_users = user_table.get_all_users()
     print(retrieved_users)
-    assert retrieved_users[0]['firstname'] == 'mike'
-    assert len(retrieved_users) == 2
-    assert retrieved_users[1]['id'] == 1
+    assert retrieved_users[0]['firstname'] == 'king'
+    assert len(retrieved_users) == 1
 
 def test_delete_user():
     """testing delete_user method"""

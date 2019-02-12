@@ -52,48 +52,51 @@ class Office:
 class OfficeTable:
     """act as table for storing a list of tables"""
 
-    offices = []
-
+    offices = {}
     next_id = len(offices) + 1
+    prefix = 'office_'
+    next_key = prefix+str(next_id)
+
 
     def get_all_offices(self):
         # returns all offices
         all_offices = []
-        for ofc in self.offices:
+        for ofc in self.offices.values():
             all_offices.append(ofc.office_data)
             
         return all_offices
 
     def get_single_office(self, id):
         # returns a single office
-        for ofc in self.offices:
-            if ofc.id == int(id):
-                return ofc
+        key = self.prefix + str(id)
+        return self.offices.get(key)
 
     def get_office_by_name(self, name):
         # retrieve an office by name
-        for ofc in self.offices:
+        for ofc in self.offices.values():
             if ofc.name == name:
                 return ofc
 
     def add_office(self, office_data):
         # add an office to the offices list
         new_office = Office(self.next_id, office_data['type'], office_data['name'])
-        self.offices.append(new_office)
+        self.offices[self.next_key] = new_office
         return new_office.office_data
 
     def update_office(self, id, office_data):
         # updates an office
-        for i in range(len(self.offices)):
-            if self.offices[i].id == int(id):
-                self.offices[i].type = office_data['type']
-                self.offices[i].name = office_data['name']
-                return self.offices[i].office_data
+        key = self.prefix + str(id)
+        office = self.offices.get(key)
+        office.type = office_data['type']
+        office.name = office_data['name']
+        self.offices[key] = office
+        return office.office_data
 
     def delete_office(self, id):
         # delete a single office
-        for i in range(len(self.offices)):
-            if self.offices[i].id == int(id):
-                del self.offices[i]
-                return True
+        key = self.prefix + str(id)
+        office = self.offices.get(key)
+        if office:
+            del self.offices[key]
+            return True
         return False
