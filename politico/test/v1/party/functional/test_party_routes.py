@@ -44,8 +44,9 @@ def test_add_party(test_client):
         data  = response.get_json()
         print(data)
         assert 'data' in data
-        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert 'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
+        party = data.get('data')[0]
+        assert 'id' in party and party['id'] == 1
+        assert 'name' in party and party['name'] == 'jubilee'
 
 def test_get_single_party(test_client):
     """A test for getting a single party"""
@@ -56,8 +57,9 @@ def test_get_single_party(test_client):
         data  = response.get_json()
         print(data)
         assert 'data' in data
-        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert 'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
+        party = data.get('data')[0]
+        assert 'id' in party and party['id'] == 1
+        assert 'name' in party and party['name'] == 'jubilee'
 
 def test_update_party(test_client):
     """A test for getting a single party"""
@@ -67,8 +69,9 @@ def test_update_party(test_client):
         data  = response.get_json()
         print(data)
         assert 'data' in data
-        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert 'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
+        party = data.get('data')[0]
+        assert 'id' in party and party['id'] == 1
+        assert 'name' in party and party['name'] == 'jubilee'
 
 def test_getting_all_partys(test_client):
     """A test for getting all party"""
@@ -77,10 +80,12 @@ def test_getting_all_partys(test_client):
         response = c.get(prefix+'/parties')
         assert response.status_code == 200
         data  = response.get_json()
-        print(data)
         assert 'data' in data
-        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert 'name' in data['data'][0] and data['data'][0]['name'] == 'jubilee'
+        all_parties = data.get('data')
+        print(all_parties)
+        party = all_parties.get('1')
+        assert 'id' in party and party['id'] == 1
+        assert 'name' in party and party['name'] == 'jubilee'
 
 def test_delete_party(test_client):
     """A test for deleting a single party"""

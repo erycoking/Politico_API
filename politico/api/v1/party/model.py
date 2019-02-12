@@ -72,25 +72,11 @@ class PartyTable:
 
     parties = {}
     next_id = len(parties) + 1
-    prefix = 'party_'
-    next_key = prefix + str(next_id)
-
-    def get_all_parties(self):
-        # returns all parties
-        all_parties = []
-        for party in self.parties.values():
-            all_parties.append(party.party_data)
-        return all_parties
-
-    def get_single_party(self, id):
-        # gets a single party by id
-        key = self.prefix + str(id)
-        return self.parties.get(key)
 
     def get_single_party_by_name(self, name):
         # gets a single party by name
         for party in self.parties.values():
-            if party.name == name:
+            if party['name'] == name:
                 return party
 
     def add_party(self, party_data):
@@ -101,25 +87,23 @@ class PartyTable:
             party_data['hq_address'], 
             party_data['logo_url']
         )
-        self.parties[self.next_key] = new_party
-        return new_party.party_data_for_updates_and_deletes
+        self.parties[self.next_id] = new_party.party_data
+        return self.parties[self.next_id]
 
     def update_party(self, id, party_data):
         # updates party data
-        part_key = self.prefix + str(id)
-        party = self.parties.get(part_key)
-        party.name = party_data['name']
-        party.hq_address = party_data['hq_address']
-        party.logo_url = party_data['logo_url']
-        self.parties[part_key] = party
-        return party.party_data_for_updates_and_deletes
+        party = self.parties.get(id)
+        party['name'] = party_data['name']
+        party['hq_address'] = party_data['hq_address']
+        party['logo_url'] = party_data['logo_url']
+        self.parties[id] = party
+        return self.parties[id]
 
     def delete_party(self, id):
         # deletes a party from the list of parties
-        party_key = self.prefix + str(id)
-        party = self.parties.get(party_key)
+        party = self.parties.get(id)
         if party:
-            del self.parties[party_key]
+            del self.parties[id]
             return True
             
         return False

@@ -39,16 +39,15 @@ def create_office():
 @office.route('/offices', methods=['GET'])
 def get_all_offices():
     # returns all offices in the DB
-    offices = office_table.get_all_offices()
     return make_response(jsonify({
         'status': 200, 
-        'data': offices
+        'data': office_table.offices
     }), 200)
 
 @office.route('/offices/<int:id>', methods=['GET'])
 def get_single_office(id):
     # returns a single office
-    office = office_table.get_single_office(id)
+    office = office_table.offices.get(id)
     if not office:
         return make_response(jsonify({
             'status': 404,
@@ -57,7 +56,7 @@ def get_single_office(id):
     else:
         return make_response(jsonify({
             'status': 200,
-            'data': [office.office_data]
+            'data': [office]
         }), 200)
 
 @office.route('/offices/<int:id>', methods=['PATCH'])
@@ -71,7 +70,7 @@ def update_office(id):
             'error': msg
         }))
 
-    office = office_table.get_single_office(id)
+    office = office_table.offices.get(id)
     if not office:
         return make_response(jsonify({
             'status': 404,
@@ -87,8 +86,8 @@ def update_office(id):
 @office.route('/offices/<int:id>', methods=['DELETE'])
 def delete_office(id):
     # delete an office in the database
-    office_check = office_table.get_single_office(id)
-    if office_check:
+    office = office_table.offices.get(id)
+    if office:
         if office_table.delete_office(id):
             return make_response(jsonify({
                 'status': 200,

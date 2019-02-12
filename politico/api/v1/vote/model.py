@@ -81,26 +81,12 @@ class VotesTable:
     # votes cast
     votes = {}
     next_id = len(votes) + 1
-    prefix = 'vote_'
-    next_key = prefix + str(next_id)
 
-    def get_all_votes(self):
-        # returns all votes
-        all_votes = []
-        for v in self.votes.values():
-            all_votes.append(v.vote_data)
-
-        return all_votes
-
-    def get_single_vote(self, id):
-        # return a single vote using the specified id
-        vote_key = self.prefix + str(id)
-        return self.votes.get(vote_key)
 
     def get_vote_by_created_by(self, voter):
         # returns a single vote using the specified voter id
         for v in self.votes.values():
-            if v.created_by == int(voter):
+            if v['created_by'] == int(voter):
                 return v
 
     def cast_vote(self, vote_data):
@@ -110,25 +96,23 @@ class VotesTable:
             vote_data['office'], 
             vote_data['candidate']
         )
-        self.votes[self.next_key] = new_vote
+        self.votes[self.next_id] = new_vote.vote_data
         return new_vote.vote_data
 
     def update_vote(self, id, vote_data):
         # updates a vote
-        vote_key = self.prefix + str(id)
-        vote = self.votes.get(vote_key)
-        vote.created_by = vote_data['created_by']
-        vote.office = vote_data['office']
-        vote.candidate = vote_data['candidate']
-        self.votes[vote_key] = vote
-        return vote.vote_data
+        vote = self.votes.get(id)
+        vote['created_by'] = vote_data['created_by']
+        vote['office'] = vote_data['office']
+        vote['candidate'] = vote_data['candidate']
+        self.votes[id] = vote
+        return self.votes[id]
 
     def delete_vote(self, id):
         # delete a vote
-        vote_key = self.prefix + str(id)
-        vote = self.votes.get(vote_key)
+        vote = self.votes.get(id)
         if vote:
-            del self.votes[vote_key]
+            del self.votes[id]
             return True
         
         return False

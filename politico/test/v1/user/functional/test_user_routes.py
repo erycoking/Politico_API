@@ -57,10 +57,11 @@ def test_add_user(test_client):
         response = add_user(c)
         assert response.status_code == 201
         data  = response.get_json()
-        print(data)
         assert 'data' in data
-        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert 'full_name' in data['data'][0] and data['data'][0]['full_name'] == 'king rozay'
+        user = data.get('data')[0]
+        print(user)
+        assert 'id' in user and user['id'] == 1
+        assert 'firstname' in user and user['firstname'] == 'king'
 
 def test_get_single_user(test_client):
     """A test for getting a single user"""
@@ -71,8 +72,9 @@ def test_get_single_user(test_client):
         data  = response.get_json()
         print(data)
         assert 'data' in data
-        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert 'firstname' in data['data'][0] and data['data'][0]['firstname'] == 'king'
+        user = data.get('data')[0]
+        assert 'id' in user and user['id'] == 1
+        assert 'firstname' in user and user['firstname'] == 'king'
 
 def test_update_user(test_client):
     """A test for getting a single user"""
@@ -82,8 +84,9 @@ def test_update_user(test_client):
         data  = response.get_json()
         print(data)
         assert 'data' in data
-        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert 'full_name' in data['data'][0] and data['data'][0]['full_name'] == 'bigfish rozay'
+        user = data.get('data')[0]
+        assert 'id' in user and user['id'] == 1
+        assert 'firstname' in user and user['firstname'] == 'bigfish'
 
 def test_getting_all_users(test_client):
     """A test for getting all user"""
@@ -92,10 +95,12 @@ def test_getting_all_users(test_client):
         response = c.get(prefix+'/users')
         assert response.status_code == 200
         data  = response.get_json()
-        print(data)
         assert 'data' in data
-        assert 'id' in data['data'][0] and data['data'][0]['id'] == 1
-        assert 'firstname' in data['data'][0] and data['data'][0]['firstname'] == 'bigfish'
+        users = data.get('data')
+        first_user = users.get('1')
+        print(users)
+        assert 'id' in first_user and first_user['id'] == 1
+        assert 'firstname' in first_user and first_user['firstname'] == 'bigfish'
 
 def test_delete_user(test_client):
     """A test for deleting a single user"""

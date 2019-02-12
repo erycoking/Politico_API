@@ -157,14 +157,6 @@ class User:
         user_data['password'] = self._password
         return user_data
 
-    @property
-    def user_data_2(self):
-        user_data_2 = {}
-        user_data_2['id'] = self._id
-        user_data_2['full_name'] = self.full_name
-        return user_data_2
-
-
 """Acts as a table for storing users """
 class UserTable:
     """User table class"""
@@ -172,28 +164,12 @@ class UserTable:
     # stores a list of users
     users = {}
     next_id = len(users) + 1
-    prefix = 'user_'
-    next_key = prefix + str(next_id)
 
-    def get_all_users(self):
-        # returns all users
-        all_users = []
-        for person in self.users.values():
-            all_users.append(person.user_data)
-
-        return all_users
-
-
-
-    def get_user_with_id(self, id):
-        #  gets a single user that matches the user id
-        user_key = self.prefix + str(id)
-        return self.users.get(user_key)
 
     def get_user_with_email(self, email):
         #  gets a single user that matches the user id
         for person in self.users.values():
-            if person.email == str(email):
+            if person['email'] == str(email):
                 return person
 
 
@@ -212,34 +188,32 @@ class UserTable:
             user_data['username'], 
             user_data['password']
         )
-        self.users[self.next_key] = new_user
-        return new_user.user_data_2
+        self.users[self.next_id] = new_user.user_data
+        return self.users[self.next_id]
 
     def update_user(self, id, user_data):
         # add a new user to the users list
-        user_key = self.prefix + str(id)
-        user = self.users.get(user_key)
-        user.firstname = user_data['firstname']
-        user.lastname = user_data['lastname']
-        user.othername = user_data['othername']
-        user.email = user_data['email']
-        user.phone_number = user_data['phone_number']
-        user.passport_url = user_data['passport_url']
-        user.is_admin = user_data['is_admin']
-        user.id_no = user_data['id_no']
-        user.username = user_data['username']
-        user.password = bcrypt.hashpw(user_data['password'].encode(), bcrypt.gensalt())
-        self.users[user_key] = user
-        return user.user_data_2
+        user = self.users.get(id)
+        user['firstname'] = user_data['firstname']
+        user['lastname'] = user_data['lastname']
+        user['othername'] = user_data['othername']
+        user['email'] = user_data['email']
+        user['phone_number'] = user_data['phone_number']
+        user['passport_url'] = user_data['passport_url']
+        user['is_admin'] = user_data['is_admin']
+        user['id_no'] = user_data['id_no']
+        user['username'] = user_data['username']
+        user['password'] = bcrypt.hashpw(user_data['password'].encode(), bcrypt.gensalt())
+        self.users[id] = user
+        return self.users[id]
 
         
 
     def delete_user(self, id):
         # deletes user in the user list
-        user_key = self.prefix + str(id)
-        user = self.users.get(user_key)
+        user = self.users.get(id)
         if user:
-            del self.users[user_key]
+            del self.users[id]
             return True
         
         return False

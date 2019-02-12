@@ -52,20 +52,23 @@ def test_update_office(office_data_2):
 
 def test_get_all_offices():
     # test getting all offices
-    offices = office_table.get_all_offices()
-    assert offices is not None
-    assert offices[0]['id'] == 1
-    assert offices[0]['type'] in ['federal', 'legislative', 'state', 'local_government']
-    assert offices[0]['name'] == 'member of paliament'
-    assert offices[0]['type'] == 'state'
+    offices = office_table.offices
+    print(offices)
+    first_office = offices.get(1)
+    assert first_office is not None
+    print(first_office)
+    assert first_office['id'] == 1
+    assert first_office['type'] in ['federal', 'legislative', 'state', 'local_government']
+    assert first_office['name'] == 'member of paliament'
+    assert first_office['type'] == 'state'
 
 def test_get_single_office():
     # tests getting a single office
-    retrieved_office = office_table.get_single_office(1)
-    assert retrieved_office.id == 1
-    assert retrieved_office.type in ['federal', 'legislative', 'state', 'local_government']
-    assert retrieved_office.type == 'state'
-    assert retrieved_office.name == 'member of paliament'
+    retrieved_office = office_table.offices.get(1)
+    assert retrieved_office.get('id') == 1
+    assert retrieved_office.get('type') in ['federal', 'legislative', 'state', 'local_government']
+    assert retrieved_office.get('type') == 'state'
+    assert retrieved_office.get('name') == 'member of paliament'
 
 def test_delete_office():
     # tests deleting an office

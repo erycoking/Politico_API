@@ -64,26 +64,12 @@ class CandidateTable:
 
     candidates = {}
     next_id = len(candidates) + 1
-    prefix = 'cand_'
-    next_key = 'cand_' + str(next_id)
 
-    def get_all_candidates(self):
-        # returns a list of all candidates
-        all_candidates = []
-        for cand in self.candidates.values():
-            all_candidates.append(cand.candidate_data)
-
-        return all_candidates
-
-    def get_single_candidate(self, id):
-        # return a single candidate with the specified id
-        key = self.prefix + str(id)
-        return self.candidates.get(key)
 
     def get_candidate_by_candidate(self, cand_id):
         # return a single candidate with the specified candidate key
         for cand in self.candidates.values():
-            if cand.candidate == int(cand_id):
+            if cand['candidate'] == int(cand_id):
                 return cand
 
     def add_candidate(self, cand_data):
@@ -94,25 +80,23 @@ class CandidateTable:
             cand_data['party'], 
             cand_data['candidate']
         )
-        self.candidates[self.next_key] = new_candidate
-        return new_candidate.candidate_data
+        self.candidates[self.next_id] = new_candidate.candidate_data
+        return self.candidates[self.next_id]
 
     def update_candidate(self, id, cand_data):
-        key = self.prefix+str(id)
         # updates candidate information 
-        candidate = self.candidates.get(key)
-        candidate.office = cand_data['office']
-        candidate.party = cand_data['party']
-        candidate.candidate = cand_data['candidate']
-        self.candidates[key] = candidate
-        return candidate.candidate_data
+        candidate = self.candidates.get(id)
+        candidate['office'] = cand_data['office']
+        candidate['party'] = cand_data['party']
+        candidate['candidate'] = cand_data['candidate']
+        self.candidates[id] = candidate
+        return self.candidates.get(id)
 
 
     def delete_candidate(self, id):
         # deletes a candidate
-        key = 'cand_'+str(id)
-        candidate = self.candidates[key]
+        candidate = self.candidates.get(id)
         if candidate:
-            del self.candidates[key]
+            del self.candidates[id]
             return True
         return False 

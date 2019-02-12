@@ -10,13 +10,13 @@ def get_parties():
     # route for displaying all parties
     return make_response(jsonify({
         'status': 200, 
-        'data': party_table.get_all_parties()
+        'data': party_table.parties
     }), 200)
 
 @party.route('/parties/<int:id>', methods=['GET'])
 def get_one_party(id):
     # route for getting a single party
-    party = party_table.get_single_party(id)
+    party = party_table.parties.get(id)
     if not party:
         return make_response(jsonify({
             'status': 404,
@@ -25,7 +25,7 @@ def get_one_party(id):
     else:
         return make_response(jsonify({
             'status': 200, 
-            'data': [party.party_data]
+            'data': [party]
         }), 200)
 
 @party.route('/parties', methods=['POST'])
@@ -77,7 +77,7 @@ def update_party(id):
             'error': msg1
         }), 400)
 
-    existing_party = party_table.get_single_party(id)
+    existing_party = party_table.parties.get(id)
     if not existing_party:
         return make_response(jsonify({
             'status': 404, 
@@ -92,7 +92,7 @@ def update_party(id):
     
 @party.route('/parties/<int:id>', methods=['DELETE'])
 def delete_party(id):
-    existing_party = party_table.get_single_party(id)
+    existing_party = party_table.parties.get(id)
     if not existing_party:
         return make_response(jsonify({
             'status': 404, 

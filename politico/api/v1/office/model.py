@@ -49,54 +49,37 @@ class Office:
 
 
 
+
 class OfficeTable:
     """act as table for storing a list of tables"""
 
     offices = {}
     next_id = len(offices) + 1
-    prefix = 'office_'
-    next_key = prefix+str(next_id)
-
-
-    def get_all_offices(self):
-        # returns all offices
-        all_offices = []
-        for ofc in self.offices.values():
-            all_offices.append(ofc.office_data)
-            
-        return all_offices
-
-    def get_single_office(self, id):
-        # returns a single office
-        key = self.prefix + str(id)
-        return self.offices.get(key)
 
     def get_office_by_name(self, name):
         # retrieve an office by name
         for ofc in self.offices.values():
-            if ofc.name == name:
+            if ofc['name'] == name:
                 return ofc
 
     def add_office(self, office_data):
         # add an office to the offices list
         new_office = Office(self.next_id, office_data['type'], office_data['name'])
-        self.offices[self.next_key] = new_office
-        return new_office.office_data
+        self.offices[self.next_id] = new_office.office_data
+        return self.offices.get(self.next_id)
 
     def update_office(self, id, office_data):
         # updates an office
-        key = self.prefix + str(id)
-        office = self.offices.get(key)
-        office.type = office_data['type']
-        office.name = office_data['name']
-        self.offices[key] = office
-        return office.office_data
+        office = self.offices.get(id)
+        office['type'] = office_data['type']
+        office['name'] = office_data['name']
+        self.offices[id] = office
+        return self.offices[id]
 
     def delete_office(self, id):
         # delete a single office
-        key = self.prefix + str(id)
-        office = self.offices.get(key)
+        office = self.offices.get(id)
         if office:
-            del self.offices[key]
+            del self.offices[id]
             return True
         return False
