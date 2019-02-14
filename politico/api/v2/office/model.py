@@ -76,3 +76,27 @@ class OfficeTable:
         office_data['name'] = office[1]
         office_data['type'] = office[2]
         return office_data
+
+
+    def get_office_election_result(self, id):
+        results = []
+        # get office first
+        # get all candidates in that office
+        # get total votes for that votes candidate
+        # return the results
+        office = self.db.fetch_one('office', 'id', id)
+
+        candidates = self.db.fetch_all_using_int_key('candidates', 'office', office[0])
+        for cand in candidates:
+            votes = self.db.fetch_all_using_int_key('vote', 'candidate', cand[0])
+            total_vote_for_specific_candidate = len(votes)
+
+            candidate_result = {
+                'office': office[0], 
+                'candidate': cand[0], 
+                'result': total_vote_for_specific_candidate
+            }
+
+            results.append(candidate_result)
+
+        return results

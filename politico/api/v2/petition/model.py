@@ -32,11 +32,11 @@ class PetitionTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """insert into petition(created_by, office, body) values(%s, %s, %s Array [ %s ]) RETURNING id;""",  
-                 (petition_data.get('created_by'), petition_data.get('office'), petition_data.get('body'))
+                """insert into petition(created_by, office, body, evidence) values(%s, %s, %s,  %s) RETURNING id;""",  
+                 (petition_data['created_by'], petition_data['office'], petition_data['body'], petition_data['evidence'])
                 )
             petition_data['id'] = cursor.fetchone()[0]
-            cursor.commit()
+            conn.commit()
             return petition_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
@@ -52,12 +52,12 @@ class PetitionTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """update petition set created_by = %s, office = %s, body = %s where id = %s RETURNING id;""", 
-                (petition_data.get('created_by'), petition_data.get('office'), petition_data.get('body'), id)
+                """update petition set created_by = %s, office = %s, body = %s, evidence = %s where id = %s RETURNING id;""", 
+                (petition_data['created_by'], petition_data['office'], petition_data['body'], petition_data['evidence'], id)
             )
 
             petition_data['id'] = cursor.fetchone()[0]
-            cursor.commit()
+            conn.commit()
             return petition_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)

@@ -16,6 +16,8 @@ from politico.api.v2.users.routes import user as user_2
 from politico.api.v2.party.routes import party as party_2
 from politico.api.v2.office.routes import office as office_2
 from politico.api.v2.candidates.routes import cand as cand_2
+from politico.api.v2.vote.routes import vote
+from politico.api.v2.petition.routes import petition
 
 
 def create_app():
@@ -41,6 +43,8 @@ def create_app():
     app.register_blueprint(party_2, url_prefix=prefix_2)
     app.register_blueprint(office_2, url_prefix=prefix_2)
     app.register_blueprint(cand_2, url_prefix=prefix_2)
+    app.register_blueprint(vote, url_prefix=prefix_2)
+    app.register_blueprint(petition, url_prefix=prefix_2)
 
 
     return app
