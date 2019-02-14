@@ -32,16 +32,12 @@ class VotesTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """insert into vote(created_by, office, candidate) values(%s, %s, %s);""",  
+                """insert into vote(created_by, office, candidate) values(%s, %s, %s) RETURNING id;""",  
                  (vote_data.get('created_by'), vote_data.get('office'), vote_data.get('candidate'))
                 )
-            vote_added = {
-                'office': cursor.fetchone()[3],
-                'candidate': cursor.fetchone()[4],
-                'created_by': cursor.fetchone()[2]
-            }
+            vote_data['id'] = cursor.fetchone()[0]
             cursor.commit()
-            return vote_added
+            return vote_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
             return None
@@ -56,16 +52,12 @@ class VotesTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """update vote set created_by = %s office = %s candidate = %s where id = %s;""", 
+                """update vote set created_by = %s office = %s candidate = %s where id = %s RETURNING id;""", 
                 (vote_data.get('created_by'), vote_data.get('office'), vote_data.get('candidate'), id)
             )
-            update_vote = {
-                'office': cursor.fetchone()[3],
-                'candidate': cursor.fetchone()[4],
-                'created_by': cursor.fetchone()[2]
-            }
+            vote_data['id'] = cursor.fetchone()[0]
             cursor.commit()
-            return update_vote
+            return vote_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
             return None

@@ -40,30 +40,19 @@ class UserTable:
             cursor.execute( 
                 """insert into users(firstname, lastname, othername, email, phone_number, 
                 passport_url, id_no, is_admin, username, password) values(%s, %s, %s, 
-                %s, %s, %s, %s, %s, %s, %s);""", (
+                %s, %s, %s, %s, %s, %s, %s) RETURNING id;""", (
                     user_data['firstname'], user_data['lastname'], user_data['othername'], 
                     user_data['email'], int(user_data['phone_number']), user_data['passport_url'], 
                      int(user_data['id_no']), bool(user_data['is_admin']),user_data['username'], 
                     password
                 )
             )
-            user = cursor.fetchone()
-            print(user)
-            newly_added_user = {
-                'id': cursor.fetchone()[0],
-                'firstname': cursor.fetchone()[1],
-                'lastname': cursor.fetchone()[2],
-                'othername': cursor.fetchone()[3],
-                'email': cursor.fetchone()[4],
-                'phone_number': cursor.fetchone()[5],
-                'passport_url': cursor.fetchone()[6],
-                'id_no': cursor.fetchone()[7],
-                'is_admin': cursor.fetchone()[8],
-                'username': cursor.fetchone()[9],
-                'password': cursor.fetchone()[10]
-            }
+            user_id = cursor.fetchone()[0]
+            print(user_id)
+            user_data['id'] = user_id
+            user_data['password'] = password
             conn.commit()
-            return newly_added_user
+            return user_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
             return None
@@ -83,29 +72,18 @@ class UserTable:
             cursor.execute(
                 """update users set firstname = %s lastname = %s othername= %s email = %s 
                 phone_number = %s passport_url = %s id_no = %s is_admin = %s username = %s 
-                password = %s where id = %s;""", (
+                password = %s where id = %s RETURNING id;""", (
                     user_data['firstname'], user_data['lastname'], user_data['othername'], 
                     user_data['email'], int(user_data['phone_number']), user_data['passport_url'], 
                     int(user_data['id_no']), bool(user_data['is_admin']), user_data['username'], 
                     password, id
                 )
             )
-            
-            updated_user = {
-                'id': cursor.fetchone()[0],
-                'firstname': cursor.fetchone()[1],
-                'lastname': cursor.fetchone()[2],
-                'othername': cursor.fetchone()[3],
-                'email': cursor.fetchone()[4],
-                'phone_number': cursor.fetchone()[5],
-                'passport_url': cursor.fetchone()[6],
-                'id_no': cursor.fetchone()[7],
-                'is_admin': cursor.fetchone()[8],
-                'username': cursor.fetchone()[9],
-                'password': cursor.fetchone()[10]
-            }
+            user_id = cursor.fetchone()[0]
+            user_data['id'] = user_id
+            user_data['password'] = password
             conn.commit()
-            return updated_user
+            return user_data            
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
             return None

@@ -32,16 +32,12 @@ class OfficeTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """insert into office(name, type) values(%s, %s);""",  
+                """insert into office(name, type) values(%s, %s) RETURNING id;""",  
                  (office_data.get('name'), office_data.get('type'))
                 )
-            office_added = {
-                'id': cursor.fetchone()[0],
-                'name': cursor.fetchone()[1],
-                'type': cursor.fetchone()[2]
-            }
+            office_data['id'] = cursor.fetchone()[0]
             cursor.commit()
-            return office_added
+            return office_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
             return None
@@ -56,16 +52,12 @@ class OfficeTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """update office set name = %s type = %s where id = %s;""", 
+                """update office set name = %s type = %s where id = %s RETURNING id;""", 
                 (office_data.get('name'), office_data.get('type'))
             )
-            update_office = {
-                'id': cursor.fetchone()[0],
-                'name': cursor.fetchone()[1],
-                'type': cursor.fetchone()[2]
-            }
+            office_data['id'] = cursor.fetchone()[0]
             cursor.commit()
-            return update_office
+            return office_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
             return None

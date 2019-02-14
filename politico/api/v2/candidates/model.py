@@ -32,15 +32,12 @@ class CandidateTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """insert into candidates(office, party, candidate) values(%s, %s, %s);""",  
+                """insert into candidates(office, party, candidate) values(%s, %s, %s) RETURNING id;""",  
                  (candidate_data.get('office'), candidate_data.get('party'), candidate_data('candidate'))
                 )
-            candidate_added = {
-                'office': cursor.fetchone()[1], 
-                'user': cursor.fetchone()[3]
-            }
+            candidate_data['id'] = cursor.fetchone()[0]
             cursor.commit()
-            return candidate_added
+            return candidate_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
             return None
@@ -55,15 +52,12 @@ class CandidateTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """update candidates set office = %s party = %s candidate = %s where id = %s;""", 
+                """update candidates set office = %s party = %s candidate = %s where id = %s RETURNING id;""", 
                 (candidate_data.get('office'), candidate_data.get('party'), candidate_data('candidate', id))
             )
-            update_candidate = {
-                'office': cursor.fetchone()[1], 
-                'user': cursor.fetchone()[3]
-            }
+            candidate_data['id'] = cursor.fetchone()[0]
             cursor.commit()
-            return update_candidate
+            return candidate_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
             return None
