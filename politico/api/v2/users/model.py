@@ -1,5 +1,5 @@
-import bcrypt
 import psycopg2
+from werkzeug.security import check_password_hash, generate_password_hash
 from politico.api.v2.db.db import DB
 
 
@@ -29,6 +29,12 @@ class UserTable:
             return self.user_data(user)
         return None
 
+    def get_user_with_username(self, name):
+        user = self.db.fetch_one_using_string('users', 'username', name)
+        if user is not None:
+            return self.user_data(user)
+        return None
+
 
     def add_user(self, user_data):
         # add a new user to the users table
@@ -36,7 +42,7 @@ class UserTable:
         conn =  self.db.connection()
         try:
             cursor = conn.cursor()
-            password = bcrypt.hashpw(user_data['password'].encode(), bcrypt.gensalt())
+            password = generate_password_hash(user_data['password'], method='sha256')
             cursor.execute( 
                 """insert into users(firstname, lastname, othername, email, phone_number, 
                 passport_url, id_no, is_admin, username, password) values(%s, %s, %s, 
@@ -68,7 +74,7 @@ class UserTable:
         conn = self.db.connection()
         try:
             cursor = conn.cursor()
-            password = bcrypt.hashpw(user_data['password'].encode(), bcrypt.gensalt())
+            password = generate_password_hash(user_data['password'], method='sha256')
             cursor.execute(
                 """update users set firstname = %s, lastname = %s, othername= %s, email = %s, 
                 phone_number = %s, passport_url = %s, id_no = %s, is_admin = %s, username = %s, 

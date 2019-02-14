@@ -3,19 +3,23 @@ from politico.api.v2.party.model import PartyTable
 from politico.api.v1.party.routes import validateKeysInParty
 from politico.api.v1.party.routes import validateValueInParty
 
+from politico.api.v2.auth.authentication import token_required
+
 party = Blueprint('party_2', __name__)
 
 party_tb = PartyTable()
 
 @party.route('/parties', methods = ['GET'])
-def get_parties():
+@token_required
+def get_parties(current_user):
     return make_response(jsonify({
         'status': 200, 
         'data': party_tb.get_parties()
     }), 200)
 
 @party.route('/parties/<int:id>', methods=['GET'])
-def get_one_party(id):
+@token_required
+def get_one_party(current_user, id):
     party = party_tb.get_one_party(id)
     if not party:
         return make_response(jsonify({
@@ -29,7 +33,8 @@ def get_one_party(id):
         }), 200)
 
 @party.route('/parties', methods=['POST'])
-def add_party():
+@token_required
+def add_party(current_user):
     party_data = request.get_json()
     msg = validateKeysInParty(party_data)
     if msg != 'ok':
@@ -59,7 +64,8 @@ def add_party():
         }), 409)
 
 @party.route('/parties/<int:id>', methods=['PATCH'])
-def update_party(id):
+@token_required
+def update_party(current_user, id):
     existing_party = party_tb.get_one_party(id)
     if not existing_party:
         return make_response(jsonify({
@@ -89,7 +95,8 @@ def update_party(id):
     }), 200)
     
 @party.route('/parties/<int:id>', methods=['DELETE'])
-def delete_party(id):
+@token_required
+def delete_party(current_user, id):
     existing_party = party_tb.get_one_party(id)
     if not existing_party:
         return make_response(jsonify({

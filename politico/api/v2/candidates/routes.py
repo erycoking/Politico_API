@@ -4,6 +4,8 @@ from politico.api.v2.office.model import OfficeTable
 from politico.api.v2.party.model import PartyTable
 from politico.api.v2.users.model import UserTable
 
+from politico.api.v2.auth.authentication import token_required
+
 cand = Blueprint('candidates', __name__)
 
 cand_tb = CandidateTable()
@@ -12,7 +14,8 @@ party_tb = PartyTable()
 office_tb = OfficeTable()
 
 @cand.route('/office/<int:office_id>/register', methods=['POST'])
-def add_candidate(office_id):
+@token_required
+def add_candidate(current_user, office_id):
     cand_data = request.get_json()
     msg = validate_candidate_info(office_id, cand_data)
     if msg != 'ok':
@@ -36,13 +39,15 @@ def add_candidate(office_id):
 
 
 @cand.route('/office/<int:office_id>/candidates', methods = ['GET'])
-def get_candidates(office_id):
+@token_required
+def get_candidates(current_user, office_id):
     return make_response(jsonify({
         'status': 200, 
         'data': cand_tb.get_candidates(office_id)
     }), 200)
 
 @cand.route('/office/<int:office_id>/candidates/<int:id>', methods=['GET'])
+@token_required
 def get_one_candidate(office_id, id):
     candidate = cand_tb.get_one_candidate(office_id, id)
     if not candidate:
@@ -58,7 +63,8 @@ def get_one_candidate(office_id, id):
 
 
 @cand.route('/office/<int:office_id>/candidates/<int:id>', methods=['PATCH'])
-def update_candidate(office_id, id):
+@token_required
+def update_candidate(current_user, office_id, id):
     existing_candidate = cand_tb.get_one_candidate(office_id, id)
     if not existing_candidate:
         return make_response(jsonify({
@@ -81,7 +87,8 @@ def update_candidate(office_id, id):
     }), 200)
     
 @cand.route('/office/<int:office_id>/candidates/<int:id>', methods=['DELETE'])
-def delete_candidate(office_id, id):
+@token_required
+def delete_candidate(current_user, office_id, id):
     existing_candidate = cand_tb.get_one_candidate(office_id, id)
     if not existing_candidate:
         return make_response(jsonify({

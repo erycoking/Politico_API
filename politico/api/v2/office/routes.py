@@ -2,13 +2,16 @@ from flask import Blueprint, request, make_response, jsonify
 from politico.api.v2.office.model import OfficeTable
 from politico.api.v1.office.route import validate_office_data
 
+from politico.api.v2.auth.authentication import token_required
+
 # blueprint
 office = Blueprint('offices', __name__)
 
 office_tb = OfficeTable()
 
 @office.route('/offices', methods=['POST'])
-def create_office():
+@token_required
+def create_office(current_user):
     office_data = request.get_json()
     msg = validate_office_data(office_data)
     if msg != 'ok':
@@ -31,14 +34,16 @@ def create_office():
             }), 400)
 
 @office.route('/offices', methods=['GET'])
-def get_all_offices():
+@token_required
+def get_all_offices(current_user):
     return make_response(jsonify({
         'status': 200, 
         'data': office_tb.get_offices()
     }), 200)
 
 @office.route('/offices/<int:id>', methods=['GET'])
-def get_single_office(id):
+@token_required
+def get_single_office(current_user, id):
     office = office_tb.get_one_office(id)
     if not office:
         return make_response(jsonify({
@@ -52,7 +57,8 @@ def get_single_office(id):
         }), 200)
 
 @office.route('/offices/<int:id>', methods=['PATCH'])
-def update_office(id):
+@token_required
+def update_office(current_user, id):
     office_data = request.get_json()
     msg = validate_office_data(office_data)
     if msg != 'ok':
@@ -75,7 +81,8 @@ def update_office(id):
         }), 200)
 
 @office.route('/offices/<int:id>', methods=['DELETE'])
-def delete_office(id):
+@token_required
+def delete_office(current_user, id):
     office = office_tb.get_one_office(id)
     if office:
         if office_tb.delete_office(id):
@@ -99,7 +106,8 @@ def delete_office(id):
 
 
 @office.route('/offices/<int:id>/result', methods=['GET'])
-def get_office_election_result(id):
+@token_required
+def get_office_election_result(current_user, id):
     results = office_tb.get_office_election_result(id)
     if not results:
         return make_response(jsonify({
