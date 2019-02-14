@@ -52,7 +52,7 @@ class PetitionTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """update petition set created_by = %s office = %s body = %s where id = %s RETURNING id;""", 
+                """update petition set created_by = %s, office = %s, body = %s where id = %s RETURNING id;""", 
                 (petition_data.get('created_by'), petition_data.get('office'), petition_data.get('body'), id)
             )
 

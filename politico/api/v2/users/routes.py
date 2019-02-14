@@ -68,3 +68,59 @@ def get_all():
         'data': user_tb.get_all_users()
     }), 200)
 
+@user.route('/users/<int:id>', methods=['PATCH'])
+def update_user(id):
+    user_exists = user_tb.get_single_user(id)
+    if not user_exists:
+        return make_response(jsonify({
+            'status': 404, 
+            'error': 'No user with id:{} was found'.format(id)
+        }), 404)
+
+    data = request.get_json()
+    msg = validate_keys_in_user_data(data)
+    if msg != 'ok':
+        return make_response(jsonify({
+            'status': 400, 
+            'error': msg
+        }), 400)
+
+    msg1 = validate_value_in_user_data(data)
+    if msg1 != 'ok':
+        return make_response(jsonify({
+            'status': 400, 
+            'error': msg1
+        }), 400)
+
+    msg2 = validate_user_input_type(data)
+    if msg2 != 'ok':
+        return make_response(jsonify({
+            'status': 400, 
+            'error': msg2
+        }), 400)
+
+    updated_user = user_tb.update_user(id, data)
+    return make_response(jsonify({
+            'status': 201,
+            'data': [updated_user]
+        }), 201)
+
+    
+@user.route('/users/<int:id>', methods=['DELETE'])
+def delete_user(id):  
+    user_exists = user_tb.get_single_user(id)
+    if not user_exists:
+        return make_response(jsonify({
+            'status': 404, 
+            'error': 'No user with id:{} was found'.format(id)
+        }), 404)   
+
+    if user_tb.delete_user(id):
+            return make_response(jsonify({
+                'status': 200,
+                'data':[{
+                    'message': 'office with id:{} deleted'.format(id)
+                }]
+            }), 200)
+
+         

@@ -70,8 +70,8 @@ class UserTable:
             cursor = conn.cursor()
             password = bcrypt.hashpw(user_data['password'].encode(), bcrypt.gensalt())
             cursor.execute(
-                """update users set firstname = %s lastname = %s othername= %s email = %s 
-                phone_number = %s passport_url = %s id_no = %s is_admin = %s username = %s 
+                """update users set firstname = %s, lastname = %s, othername= %s, email = %s, 
+                phone_number = %s, passport_url = %s, id_no = %s, is_admin = %s, username = %s, 
                 password = %s where id = %s RETURNING id;""", (
                     user_data['firstname'], user_data['lastname'], user_data['othername'], 
                     user_data['email'], int(user_data['phone_number']), user_data['passport_url'], 
