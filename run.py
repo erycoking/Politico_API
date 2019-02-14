@@ -5,4 +5,5 @@ from politico.config import create_app
 app = create_app()
 
 """Setting debug to true"""
-app.run(debug=True)
+# debug=True
+app.run()
