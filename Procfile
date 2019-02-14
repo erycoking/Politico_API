@@ -1,2 +1,2 @@
-web: gunicorn run:config
+web: gunicorn run:app
 
