@@ -7,36 +7,37 @@ class CandidateTable:
     def __init__(self):
         self.db = DB()
 
-    def get_one_candidate(self, id):
-        candidate = self.db.fetch_one('candidate', 'id', id)
+    def get_one_candidate(self, office_id, id):
+        candidate = self.db.fetch_one_using_two_values('candidates','office', office_id, 'id', id)
         if candidate is not None:
             return self.candidate_data(candidate)
         return None
 
-    def get_one_candidate_by_user(self, id):
-        candidate = self.db.fetch_one('candidate', 'candidate', id)
+    def get_one_candidate_by_user(self, office_id, id):
+        candidate = self.db.fetch_one_using_two_values('candidates','office', office_id, 'id', id)
         if candidate is not None:
             return self.candidate_data(candidate)
         return None
 
-    def get_candidates(self):
+    def get_candidates(self, office_id):
         candidates = []
-        stored_candidates = self.db.fetch_all('candidate')
+        stored_candidates = self.db.fetch_all_using_int_key('candidates', 'office', office_id)
         for candidate in stored_candidates:
             candidates.append(self.candidate_data(candidate))
         return candidates
 
-    def create_candidate(self, candidate_data):
+    def create_candidate(self, office_id, candidate_data):
 
         conn = self.db.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
                 """insert into candidates(office, party, candidate) values(%s, %s, %s) RETURNING id;""",  
-                 (candidate_data.get('office'), candidate_data.get('party'), candidate_data('candidate'))
+                 (office_id, candidate_data['party'], candidate_data['candidate'])
                 )
             candidate_data['id'] = cursor.fetchone()[0]
-            cursor.commit()
+            candidate_data['office'] = office_id
+            conn.commit()
             return candidate_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
@@ -47,16 +48,17 @@ class CandidateTable:
 
         return None
 
-    def update_candidate(self, id, candidate_data):
+    def update_candidate(self, office_id, id, candidate_data):
         conn =  self.db.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """update candidates set office = %s party = %s candidate = %s where id = %s RETURNING id;""", 
-                (candidate_data.get('office'), candidate_data.get('party'), candidate_data('candidate', id))
+                """update candidates set office = %s, party = %s, candidate = %s where id = %s RETURNING id;""", 
+                (office_id, candidate_data['party'], candidate_data['candidate'], id)
             )
             candidate_data['id'] = cursor.fetchone()[0]
-            cursor.commit()
+            candidate_data['office'] = office_id
+            conn.commit()
             return candidate_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
@@ -67,7 +69,7 @@ class CandidateTable:
 
         return None
 
-    def delete_candidate(self, id):
+    def delete_candidate(self, office_id, id):
         return self.db.delete_one('candidates', 'id', id)
 
     def candidate_data(self, candidate):

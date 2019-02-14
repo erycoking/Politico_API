@@ -32,11 +32,12 @@ class PartyTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """insert into party(name, hq_address, logo_url) values(%s, %s, %s) RETURNING id;""",  
-                 (party_data.get('name'), party_data.get('hq_address'), party_data('logo_url'))
+                """insert into party(name, hq_address, logo_url) values(%s, %s, %s) RETURNING id;""", (
+                    party_data['name'], party_data['hq_address'], party_data['logo_url']
                 )
+            )
             party_data['id'] = cursor.fetchone()[0]
-            cursor.commit()
+            conn.commit()
             return party_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
@@ -52,11 +53,11 @@ class PartyTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """update party set name = %s hq_address = %s logo_url = %s where id = %s RETURNING id;""", 
-                (party_data.get('name'), party_data.get('hq_address'), party_data('logo_url', id))
+                """update party set name = %s, hq_address = %s, logo_url = %s where id = %s RETURNING id;""", 
+                (party_data['name'], party_data['hq_address'], party_data['logo_url'], id)
             )
             party_data['id'] = cursor.fetchone()[0]
-            cursor.commit()
+            conn.commit()
             return party_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)

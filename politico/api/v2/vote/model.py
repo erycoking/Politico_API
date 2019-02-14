@@ -52,7 +52,7 @@ class VotesTable:
         try:
             cursor = conn.cursor()
             cursor.execute(
-                """update vote set created_by = %s office = %s candidate = %s where id = %s RETURNING id;""", 
+                """update vote set created_by = %s, office = %s, candidate = %s where id = %s RETURNING id;""", 
                 (vote_data.get('created_by'), vote_data.get('office'), vote_data.get('candidate'), id)
             )
             vote_data['id'] = cursor.fetchone()[0]

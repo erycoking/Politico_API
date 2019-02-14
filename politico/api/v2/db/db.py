@@ -136,6 +136,23 @@ class DB:
 
         return None
 
+    def fetch_one_using_two_values(self, tb_name, search_key, value, search_key_2, value_2):
+        # value and value_2 are both integers
+        conn = self.connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("select * from %s where %s = %s and %s = %s" % (tb_name, search_key, value, search_key_2, value_2))
+            result = cursor.fetchone()
+            return result
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
+        finally:
+            if self._conn is not None:
+                self._conn.close()
+
+        return None
+
     def fetch_one_using_string(self, tb_name, search_key, value):
         conn = self.connection()
         try:
@@ -152,11 +169,96 @@ class DB:
 
         return None
 
+    def fetch_one_using_strings_with_two_values(self, tb_name, search_key, value, search_key_2, value_2):
+        # value and value_2 are both strings
+        conn = self.connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("select * from %s where %s = '%s' and %s = '%s'" % (tb_name, search_key, value, search_key_2, value_2))
+            result = cursor.fetchone()
+            return result
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
+        finally:
+            if self._conn is not None:
+                self._conn.close()
+
+        return None
+
+
+    def fetch_one_using_strings_as_first_values(self, tb_name, search_key, value, search_key_2, value_2):
+        # value 1 str value 2 int
+        conn = self.connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("select * from %s where %s = '%s' and %s = %s" % (tb_name, search_key, value, search_key_2, value_2))
+            result = cursor.fetchone()
+            return result
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
+        finally:
+            if self._conn is not None:
+                self._conn.close()
+
+        return None
+
+    def fetch_one_using_strings_as_second_values(self, tb_name, search_key, value, search_key_2, value_2):
+        # value 1 int value 2 str
+        conn = self.connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("select * from %s where %s = %s and %s = %s" % (tb_name, search_key, value, search_key_2, value_2))
+            result = cursor.fetchone()
+            return result
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
+        finally:
+            if self._conn is not None:
+                self._conn.close()
+
+        return None
+
+
     def fetch_all(self, tb_name):
         conn = self.connection()
         try:
             cursor = conn.cursor()
             cursor.execute("select * from %s" % tb_name)
+            result = cursor.fetchall()
+            return result
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
+        finally:
+            if self._conn is not None:
+                self._conn.close()
+        
+        return None
+
+    def fetch_all_using_int_key(self, tb_name, search_key, value):
+        conn = self.connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("select * from %s where %s = %s" % (tb_name, search_key, value))
+            result = cursor.fetchall()
+            return result
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
+        finally:
+            if self._conn is not None:
+                self._conn.close()
+        
+        return None
+
+    def fetch_all_using_str_key(self, tb_name, search_key, value):
+        conn = self.connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("select * from %s where %s = '%s'" % (tb_name, search_key, value))
             result = cursor.fetchall()
             return result
         except (Exception, psycopg2.DatabaseError) as error:
