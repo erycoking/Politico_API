@@ -52,7 +52,7 @@ class DB:
                 office integer references office(id), 
                 party integer references party(id), 
                 candidate integer references users(id),
-                primary key (id, office, candidate) 
+                primary key (office, candidate) 
             );
         """
 
@@ -63,7 +63,7 @@ class DB:
                 created_by integer references users(id), 
                 office integer references office(id), 
                 candidate integer references candidates(id), 
-                primary key (id, office, created_by)
+                primary key (office, created_by)
             );
         """
 

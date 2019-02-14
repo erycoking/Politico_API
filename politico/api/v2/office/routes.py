@@ -98,3 +98,16 @@ def delete_office(id):
 
 
 
+@office.route('/offices/<int:id>/result', methods=['GET'])
+def get_office_election_result(id):
+    results = office_tb.get_office_election_result(id)
+    if not results:
+        return make_response(jsonify({
+            'status': 404,
+            'error': 'No result found'
+        }), 404)
+    else:
+        return make_response(jsonify({
+            'status': 200,
+            'data': results
+        }), 200)

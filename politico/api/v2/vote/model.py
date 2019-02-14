@@ -36,7 +36,7 @@ class VotesTable:
                  (vote_data.get('created_by'), vote_data.get('office'), vote_data.get('candidate'))
                 )
             vote_data['id'] = cursor.fetchone()[0]
-            cursor.commit()
+            conn.commit()
             return vote_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
@@ -56,7 +56,7 @@ class VotesTable:
                 (vote_data.get('created_by'), vote_data.get('office'), vote_data.get('candidate'), id)
             )
             vote_data['id'] = cursor.fetchone()[0]
-            cursor.commit()
+            conn.commit()
             return vote_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             print(error)
