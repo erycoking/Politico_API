@@ -4,6 +4,8 @@ from politico.api.v2.office.model import OfficeTable
 from politico.api.v2.vote.model import VotesTable
 from politico.api.v2.users.model import UserTable
 
+from politico.api.v2.auth.authentication import token_required
+
 vote = Blueprint('votes', __name__)
 
 votes_tb = VotesTable()
@@ -12,7 +14,8 @@ user_tb = UserTable()
 office_tb = OfficeTable()
 
 @vote.route('/votes', methods=['POST'])
-def add_vote():
+@token_required
+def add_vote(current_user):
     vote_data = request.get_json()
     msg = validate_vote_info(vote_data)
     if msg != 'ok':
@@ -36,14 +39,16 @@ def add_vote():
 
 
 @vote.route('/votes', methods = ['GET'])
-def get_votes():
+@token_required
+def get_votes(current_user):
     return make_response(jsonify({
         'status': 200, 
         'data': votes_tb.get_votes()
     }), 200)
 
 @vote.route('/votes/<int:id>', methods=['GET'])
-def get_one_vote(id):
+@token_required
+def get_one_vote(current_user, id):
     vote = votes_tb.get_one_vote(id)
     if not vote:
         return make_response(jsonify({
@@ -58,7 +63,8 @@ def get_one_vote(id):
 
 
 @vote.route('/votes/<int:id>', methods=['PATCH'])
-def update_vote(id):
+@token_required
+def update_vote(current_user, id):
     existing_vote = votes_tb.get_one_vote(id)
     if not existing_vote:
         return make_response(jsonify({
@@ -81,7 +87,8 @@ def update_vote(id):
     }), 200)
     
 @vote.route('/votes/<int:id>', methods=['DELETE'])
-def delete_vote(id):
+@token_required
+def delete_vote(current_user, id):
     existing_vote = votes_tb.get_one_vote(id)
     if not existing_vote:
         return make_response(jsonify({

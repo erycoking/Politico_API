@@ -19,6 +19,8 @@ from politico.api.v2.candidates.routes import cand as cand_2
 from politico.api.v2.vote.routes import vote
 from politico.api.v2.petition.routes import petition
 
+from politico.api.v2.auth.authentication import auth
+
 
 def create_app():
 
@@ -45,6 +47,11 @@ def create_app():
     app.register_blueprint(cand_2, url_prefix=prefix_2)
     app.register_blueprint(vote, url_prefix=prefix_2)
     app.register_blueprint(petition, url_prefix=prefix_2)
+
+    auth_prefix_2 = '/api/v2/auth'
+
+    # register blueprints for auth
+    app.register_blueprint(auth, url_prefix=auth_prefix_2)
 
 
     return app

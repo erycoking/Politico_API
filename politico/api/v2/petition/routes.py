@@ -3,6 +3,8 @@ from politico.api.v2.petition.model import PetitionTable
 from politico.api.v2.office.model import OfficeTable
 from politico.api.v2.users.model import UserTable
 
+from politico.api.v2.auth.authentication import token_required
+
 petition = Blueprint('petitions', __name__)
 
 petition_tb = PetitionTable()
@@ -10,7 +12,8 @@ user_tb = UserTable()
 office_tb = OfficeTable()
 
 @petition.route('/petitions', methods=['POST'])
-def add_petition():
+@token_required
+def add_petition(current_user):
     petition_data = request.get_json()
     print(petition_data)
     msg = validate_petition_info(petition_data)
@@ -35,14 +38,16 @@ def add_petition():
 
 
 @petition.route('/petitions', methods = ['GET'])
-def get_petitions():
+@token_required
+def get_petitions(current_user):
     return make_response(jsonify({
         'status': 200, 
         'data': petition_tb.get_petitions()
     }), 200)
 
 @petition.route('/petitions/<int:id>', methods=['GET'])
-def get_one_petition(id):
+@token_required
+def get_one_petition(current_user, id):
     petition = petition_tb.get_one_petition(id)
     if not petition:
         return make_response(jsonify({
@@ -57,7 +62,8 @@ def get_one_petition(id):
 
 
 @petition.route('/petitions/<int:id>', methods=['PATCH'])
-def update_petition(id):
+@token_required
+def update_petition(current_user, id):
     existing_petition = petition_tb.get_one_petition(id)
     if not existing_petition:
         return make_response(jsonify({
@@ -80,7 +86,8 @@ def update_petition(id):
     }), 200)
     
 @petition.route('/petitions/<int:id>', methods=['DELETE'])
-def delete_petition(id):
+@token_required
+def delete_petition(current_user, id):
     existing_petition = petition_tb.get_one_petition(id)
     if not existing_petition:
         return make_response(jsonify({
