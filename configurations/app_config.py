@@ -11,9 +11,3 @@ class DevelopmentConfig(configurations):
     """Configurations for Development."""
     DEBUG = True
 
-
-
-
-app_config = {
-    'development': DevelopmentConfig
-}
