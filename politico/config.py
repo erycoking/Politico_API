@@ -21,6 +21,8 @@ from politico.api.v2.petition.routes import petition
 
 from politico.api.v2.auth.authentication import auth
 
+from configurations.app_config import app_config
+
 
 def create_app():
 
@@ -28,7 +30,7 @@ def create_app():
     db.initialize_db()
 
     # create the app
-    app = Flask(__name__)
+    app = Flask(__name__, instance_relative_config=True)
 
     prefix = '/api/v1'
 
@@ -53,5 +55,5 @@ def create_app():
     # register blueprints for auth
     app.register_blueprint(auth, url_prefix=auth_prefix_2)
 
-
+    app.config.from_object(app_config['development'])
     return app
