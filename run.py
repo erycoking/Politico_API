@@ -7,4 +7,4 @@ from politico.config import create_app
 app = create_app()
 
 """Setting debug to true"""
-app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 9999)), debug=False)
+app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 7777)), debug=False)
