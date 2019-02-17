@@ -7,7 +7,6 @@ from werkzeug.security import check_password_hash
 from politico.api.v2.users.model import UserTable
 
 from politico.api.v1.user.routes import validate_keys_in_user_data
-from politico.api.v1.user.routes import validate_user_input_type
 from politico.api.v1.user.routes import validate_value_in_user_data
 
 user_tb = UserTable()
@@ -102,16 +101,19 @@ def add_new_user():
             'error': msg1
         }), 400)
 
-    msg2 = validate_user_input_type(data)
-    if msg2 != 'ok':
+    msg2 = check_if_user_exists(data)
+    if msg2:
         return make_response(jsonify({
-            'status': 400, 
+            'status': 409,
             'error': msg2
-        }), 400)
-
-    existing_user = user_tb.get_user_with_email(data['email'])
-    if not existing_user:
+        }), 409)
+    else:
         new_user = user_tb.add_user(data)
+        if 'error' in new_user:
+            return make_response(jsonify({
+                'status': 400,
+                'error': new_user['error']
+            }), 400)
         token = jwt.encode({'public_id': new_user['id'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, secret_key)
         return make_response(jsonify({
             'status': 200,
@@ -120,8 +122,26 @@ def add_new_user():
                 'user': new_user
             }]
         }))
-    else:
-        return make_response(jsonify({
-            'status': 409,
-            'error': 'user with email::{} already exists!!!'.format(data['email'])
-        }), 409)
+        
+
+
+def check_if_user_exists(data):
+    msg = None
+    existing_user_with_email = user_tb.get_user_with_email(data['email'])
+    existing_user_with_passport_url = user_tb.get_user_with_string('passport_url', data['passport_url'])
+    existing_user_with_phone_number = user_tb.get_user_with_int('phone_number', data['phone_number'])
+    existing_user_with_id_no = user_tb.get_user_with_int('id_no', data['id_no'])
+    existing_user_with_username = user_tb.get_user_with_username(data['username'])
+
+    if existing_user_with_email:
+        msg = 'user with email::{} already exists!!!'.format(data['email'])
+    elif existing_user_with_passport_url:
+        msg = 'user with passport_url::{} already exists!!!'.format(data['passport_url'])
+    elif existing_user_with_phone_number:
+        msg = 'user with phone_number::{} already exists!!!'.format(data['phone_number'])
+    elif existing_user_with_id_no:
+        msg = 'user with id_no::{} already exists!!!'.format(data['id_no'])
+    elif existing_user_with_username:
+        msg = 'user with username::{} already exists!!!'.format(data['username'])
+    
+    return msg

@@ -25,7 +25,13 @@ def add_petition(current_user):
     else:
         petition = petition_tb.get_one_petition(petition_data.get('petition'))
         if not petition:
+            petition_data['created_by'] = current_user['id']
             added_petition = petition_tb.create_petition(petition_data)
+            if 'error' in added_petition:
+                return make_response(jsonify({
+                    'status':400, 
+                    'error': added_petition['error']
+                }), 400)
             return make_response(jsonify({
                 'status': 200, 
                 'data': [added_petition]
@@ -79,7 +85,13 @@ def update_petition(current_user, id):
             'error': msg
         }), 400)
 
+    petition_data['created_by'] = current_user['id']
     updated_petition = petition_tb.update_petition(id, petition_data)
+    if 'error' in updated_petition:
+        return make_response(jsonify({
+            'status':400, 
+            'error': updated_petition['error']
+        }), 400)
     return make_response(jsonify({
         'status': 200, 
         'data': [updated_petition]
@@ -111,20 +123,15 @@ def delete_petition(current_user, id):
 
 
 def validate_petition_info(petition):
-    user = user_tb.get_single_user(petition['created_by'])
     office = office_tb.get_one_office(petition['office'])
 
     msg = None
     if not petition:
         msg = 'petition information is required'
-    elif 'created_by' not in petition:
-        msg = 'user missing'
     elif 'office' not in petition:
         msg = 'office id missing'
-    elif not isinstance(petition['created_by'], int) or not isinstance(petition['office'], int):
+    elif not petition['office'].isdigit():
         msg = 'all field should be of integer type'
-    elif not user:
-        msg = 'User does not exist'
     elif not office:
         msg =  'Office does not exist'
     else:

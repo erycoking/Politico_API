@@ -6,6 +6,8 @@ from politico.api.v2.users.model import UserTable
 
 from politico.api.v2.auth.authentication import token_required
 
+import re
+
 cand = Blueprint('candidates', __name__)
 
 cand_tb = CandidateTable()
@@ -17,16 +19,22 @@ office_tb = OfficeTable()
 @token_required
 def add_candidate(current_user, office_id):
     cand_data = request.get_json()
-    msg = validate_candidate_info(office_id, cand_data)
+    msg = validate_candidate_info(cand_data)
     if msg != 'ok':
         return make_response(jsonify({
             'status':400, 
             'error': msg
         }), 400)
     else:
-        cand = cand_tb.get_one_candidate_by_user(office_id, cand_data.get('candidate'))
+        cand = cand_tb.get_one_candidate_by_user(office_id, current_user.get('id'))
         if not cand:
+            cand_data['candidate'] = current_user.get('id')
             added_cand = cand_tb.create_candidate(office_id, cand_data)
+            if 'error' in added_cand:
+                return make_response(jsonify({
+                    'status':400, 
+                    'error': added_cand['error']
+                }), 400)
             return make_response(jsonify({
                 'status': 200, 
                 'data': [added_cand]
@@ -48,7 +56,7 @@ def get_candidates(current_user, office_id):
 
 @cand.route('/office/<int:office_id>/candidates/<int:id>', methods=['GET'])
 @token_required
-def get_one_candidate(office_id, id):
+def get_one_candidate(current_user, office_id, id):
     candidate = cand_tb.get_one_candidate(office_id, id)
     if not candidate:
         return make_response(jsonify({
@@ -73,14 +81,20 @@ def update_candidate(current_user, office_id, id):
         }), 404)
         
     cand_data = request.get_json()
-    msg = validate_candidate_info(office_id, cand_data)
+    msg = validate_candidate_info(cand_data)
     if msg != 'ok':
         return make_response(jsonify({
             'status':400, 
             'error': msg
         }), 400)
 
+    cand_data['candidate'] = id
     updated_candidate = cand_tb.update_candidate(office_id, id, cand_data)
+    if 'error' in updated_candidate:
+        return make_response(jsonify({
+            'status':400, 
+            'error': updated_candidate['error']
+        }), 400)
     return make_response(jsonify({
         'status': 200, 
         'data': [updated_candidate]
@@ -111,24 +125,13 @@ def delete_candidate(current_user, office_id, id):
 
 
 
-def validate_candidate_info(office_id, cand):
-    user = user_tb.get_single_user(cand['candidate'])
-    office = office_tb.get_one_office(office_id)
-    party = party_tb.get_one_party(cand['party'])
+def validate_candidate_info(cand):
     msg = None
-    if not cand:
-        msg = 'candidate information is required'
-    elif 'party' not in cand:
+    if 'party' not in cand:
         msg = 'party missing'
-    elif 'candidate' not in cand:
-        msg = 'candidate id missing'
-    elif not isinstance(cand['party'], int) or not isinstance(cand['candidate'], int):
+    elif not (str(cand['party'])).isdigit():
         msg = 'all field should be of integer type'
-    elif not user:
-        msg = 'You have to be registered as citizen before you become a candidate'
-    elif not office:
-        msg =  'Office does not exists'
-    elif not party:
+    elif not party_tb.get_one_party(cand['party']):
         msg = 'Party does not exist'
     else:
         msg = 'ok'

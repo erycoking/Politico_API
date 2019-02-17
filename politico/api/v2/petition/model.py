@@ -39,8 +39,9 @@ class PetitionTable:
             conn.commit()
             return petition_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
-            print(error)
-            return None
+            err = {'error' : str(error)}
+            print(err)
+            return err
         finally:
             if conn is not None:
                 conn.close()
@@ -60,8 +61,9 @@ class PetitionTable:
             conn.commit()
             return petition_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
-            print(error)
-            return None
+            err = {'error' : str(error)}
+            print(err)
+            return err
         finally:
             if conn is not None:
                 conn.close()

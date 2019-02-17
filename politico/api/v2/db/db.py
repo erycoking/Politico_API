@@ -1,4 +1,5 @@
 import psycopg2
+import os
 
 class DB:
     """Database initialization class"""
@@ -16,15 +17,15 @@ class DB:
         users = """
             create table if not exists users (
                 id serial primary key not null, 
-                firstname varchar(20) not null, 
-                lastname varchar(20) not null, 
-                othername varchar(20) not null, 
-                email varchar(50) not null unique, 
-                phone_number integer not null unique, 
-                passport_url varchar(255) not null, 
-                id_no integer not null unique, 
+                firstname varchar(50) not null, 
+                lastname varchar(50) not null, 
+                othername varchar(50) not null, 
+                email varchar(100) not null unique, 
+                phone_number bigint not null unique, 
+                passport_url varchar(255) not null unique, 
+                id_no bigint not null unique, 
                 is_admin bool not null, 
-                username varchar(20) not null unique, 
+                username varchar(50) not null unique, 
                 password varchar(255) not null
             );
         """
@@ -32,16 +33,16 @@ class DB:
         party = """
             create table if not exists party(
                 id serial primary key not null, 
-                name varchar(100) not null, 
+                name varchar(100) not null unique, 
                 hq_address varchar(255) not null, 
-                logo_url varchar(255) not null
+                logo_url varchar(255) not null unique
             );
         """
 
         office = """
             create table if not exists office(
                 id serial primary key not null, 
-                name varchar(50) not null, 
+                name varchar(50) not null unique, 
                 type varchar(50) not null 
             );
         """

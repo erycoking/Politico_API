@@ -53,6 +53,11 @@ def add_party(current_user):
     party_exists = party_tb.get_one_party_by_name(party_data['name'])
     if not party_exists:
         added_party = party_tb.create_party(party_data)
+        if 'error' in added_party:
+            return make_response(jsonify({
+                'status':400, 
+                'error': added_party['error']
+            }), 400)
         return make_response(jsonify({
             'status': 201,
             'data': [added_party]
@@ -89,6 +94,11 @@ def update_party(current_user, id):
         }), 400)
 
     updated_party = party_tb.update_party(id, party_data)
+    if 'error' in updated_party:
+        return make_response(jsonify({
+            'status':400, 
+            'error': updated_party['error']
+        }), 400)
     return make_response(jsonify({
         'status': 200, 
         'data': [updated_party]

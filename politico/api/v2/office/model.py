@@ -15,7 +15,7 @@ class OfficeTable:
 
     def get_one_office_by_name(self, name):
         office = self.db.fetch_one_using_string('office', 'name', name)
-        if office is not None:
+        if office:
             return self.office_data(office)
         return None
 
@@ -39,8 +39,9 @@ class OfficeTable:
             conn.commit()
             return office_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
-            print(error)
-            return None
+            err = {'error' : str(error)}
+            print(err)
+            return err
         finally:
             if conn is not None:
                 conn.close()
@@ -59,8 +60,9 @@ class OfficeTable:
             conn.commit()
             return office_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
-            print(error)
-            return None
+            err = {'error' : str(error)}
+            print(err)
+            return err
         finally:
             if conn is not None:
                 conn.close()

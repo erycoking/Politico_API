@@ -34,6 +34,18 @@ class UserTable:
         if user is not None:
             return self.user_data(user)
         return None
+        
+    def get_user_with_string(self, search_key, value):
+        user = self.db.fetch_one_using_string('users', search_key, value)
+        if user is not None:
+            return self.user_data(user)
+        return None
+
+    def get_user_with_int(self, search_key, value):
+        user = self.db.fetch_one('users', search_key, int(value))
+        if user is not None:
+            return self.user_data(user)
+        return None
 
 
     def add_user(self, user_data):
@@ -54,14 +66,14 @@ class UserTable:
                 )
             )
             user_id = cursor.fetchone()[0]
-            print(user_id)
             user_data['id'] = user_id
             user_data['password'] = password
             conn.commit()
             return user_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
-            print(error)
-            return None
+            err = {'error': str(error)}
+            print(err)
+            return err
         finally:
             if conn is not None:
                 conn.close()
@@ -91,8 +103,9 @@ class UserTable:
             conn.commit()
             return user_data            
         except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-            return None
+            err = {'error': str(error)}
+            print(err)
+            return err
 
         return None
 
@@ -109,8 +122,8 @@ class UserTable:
         user_data['email'] = user[4]
         user_data['phone_number'] = user[5]
         user_data['passport_url'] = user[6]
-        user_data['is_admin'] = user[7]
-        user_data['id_no'] = user[8]
+        user_data['id_no'] = user[7]
+        user_data['is_admin'] = user[8]
         user_data['username'] = user[9]
         user_data['password'] = user[10]
         return user_data

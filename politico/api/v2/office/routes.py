@@ -23,6 +23,11 @@ def create_office(current_user):
         existing_office = office_tb.get_one_office_by_name(office_data['name'])
         if not existing_office:
             created_office = office_tb.create_office(office_data)
+            if 'error' in created_office:
+                return make_response(jsonify({
+                    'status':400, 
+                    'error': created_office['error']
+                }), 400)
             return make_response(jsonify({
                 'status': 201, 
                 'data': [created_office]
@@ -75,6 +80,11 @@ def update_office(current_user, id):
         }), 404)
     else:
         updated_office = office_tb.update_office(id, office_data)
+        if 'error' in updated_office:
+            return make_response(jsonify({
+                'status':400, 
+                'error': updated_office['error']
+            }), 400)
         return make_response(jsonify({
             'status': 200,
             'data': [updated_office]

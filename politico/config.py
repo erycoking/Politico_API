@@ -1,8 +1,11 @@
 """ Initialize the application"""
 
 # import flask
-from flask import Flask
+from flask import Flask, jsonify, make_response
 from politico.api.v2.db.db import DB
+
+# import global exception handler
+from werkzeug.exceptions import default_exceptions, HTTPException
 
 # import blueprints
 
@@ -21,16 +24,31 @@ from politico.api.v2.petition.routes import petition
 
 from politico.api.v2.auth.authentication import auth
 
+# create the app
+app = Flask(__name__)
+
+@app.errorhandler(Exception)
+def handle_error(e):
+     code = 500
+     if isinstance(e, HTTPException):
+        code = e.code
+
+     print(e)
+     return make_response(jsonify({
+          'status': code, 
+          'error': str(e)
+     }), code)
+
 
 def create_app():
 
     db = DB()
     db.initialize_db()
 
-    # create the app
-    app = Flask(__name__)
-
     prefix = '/api/v1'
+
+    for ex in default_exceptions:
+        app.register_error_handler(ex, handle_error)
 
     # register blueprints for version 1
     app.register_blueprint(user, url_prefix=prefix)
