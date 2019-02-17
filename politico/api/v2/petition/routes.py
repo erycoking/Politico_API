@@ -23,7 +23,7 @@ def add_petition(current_user):
             'error': msg
         }), 400)
     else:
-        petition = petition_tb.get_one_petition(petition_data.get('petition'))
+        petition = petition_tb.get_one_petition_by_created_by_and_office(current_user['id'], petition_data['office'])
         if not petition:
             petition_data['created_by'] = current_user['id']
             added_petition = petition_tb.create_petition(petition_data)
@@ -39,7 +39,7 @@ def add_petition(current_user):
         else:
             return make_response(jsonify({
                 'status': 409, 
-                'error': 'cannot petition twice'
+                'error': 'cannot petition twice on the same office'
             }), 409)
 
 
@@ -130,7 +130,7 @@ def validate_petition_info(petition):
         msg = 'petition information is required'
     elif 'office' not in petition:
         msg = 'office id missing'
-    elif not petition['office'].isdigit():
+    elif not (str(petition['office'])).isdigit():
         msg = 'all field should be of integer type'
     elif not office:
         msg =  'Office does not exist'

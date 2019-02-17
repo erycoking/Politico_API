@@ -1,5 +1,6 @@
 import psycopg2
 from politico.api.v2.db.db import DB
+import datetime
 
 class PetitionTable:
     """petition table"""
@@ -9,6 +10,12 @@ class PetitionTable:
 
     def get_one_petition(self, id):
         petition = self.db.fetch_one('petition', 'id', id)
+        if petition is not None:
+            return self.petition_data(petition)
+        return None
+
+    def get_one_petition_by_created_by_and_office(self, created_by, office):
+        petition = self.db.fetch_one_using_two_values('petition', 'created_by', created_by, 'office', office)
         if petition is not None:
             return self.petition_data(petition)
         return None
@@ -36,6 +43,8 @@ class PetitionTable:
                  (petition_data['created_by'], petition_data['office'], petition_data['body'], petition_data['evidence'])
                 )
             petition_data['id'] = cursor.fetchone()[0]
+            date = datetime.datetime.now().date()
+            petition_data['created_on'] = str(date)
             conn.commit()
             return petition_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
@@ -58,6 +67,8 @@ class PetitionTable:
             )
 
             petition_data['id'] = cursor.fetchone()[0]
+            date = datetime.datetime.now().date()
+            petition_data['created_on'] = str(date)
             conn.commit()
             return petition_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
@@ -75,8 +86,9 @@ class PetitionTable:
 
     def petition_data(self, petition):
         petition_data = {}
+        date = str(petition[1])
         petition_data['id'] = petition[0]
-        petition_data['created_on'] = petition[1]
+        petition_data['created_on'] = date
         petition_data['created_by'] = petition[2]
         petition_data['office'] = petition[3]
         petition_data['body'] = petition[4]

@@ -38,9 +38,8 @@ class VotesTable:
                 )
             vote_data['id'] = cursor.fetchone()[0]
             date = datetime.datetime.now().date()
-            vote_data['created_on'] = date
+            vote_data['created_on'] = str(date)
             conn.commit()
-            print(vote_data['created_on'])
             return vote_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             err = {'error': str(error)}
