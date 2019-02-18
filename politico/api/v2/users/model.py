@@ -7,8 +7,11 @@ from politico.api.v2.db.db import DB
 class UserTable:
     """class for user table interaction"""
 
-    def __init__(self):
-        self.db = DB()
+    def __init__(self, db=None):
+        if db:
+            self.db = db
+        else:
+            self.db = DB()
 
     def get_single_user(self, id):
         user = self.db.fetch_one('users', 'id', id)
@@ -52,6 +55,7 @@ class UserTable:
         # add a new user to the users table
         
         conn =  self.db.connection()
+        print(conn)
         try:
             cursor = conn.cursor()
             password = generate_password_hash(user_data['password'], method='sha256')

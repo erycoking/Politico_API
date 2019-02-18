@@ -21,7 +21,7 @@ def test_client():
 def create_office(test_client):
     # creates office
     office_data = {
-        "type": "local_government",
+        "type": "local government",
         "name": "governer"
     }
     return test_client.post(prefix+'/offices', json = office_data)
@@ -29,7 +29,7 @@ def create_office(test_client):
 def update_office(test_client):
     # update office
     update_data = {
-            "type": "local_government", 
+            "type": "local government", 
             "name": "woman rep"
         }
     return test_client.patch(prefix+'/offices/1', json = update_data)
@@ -42,8 +42,8 @@ def test_add_office_route(test_client):
         resp = office_resp.get_json()
         assert resp is not None
         assert resp['data'][0]['name'] == 'governer'
-        assert resp['data'][0]['type'] == 'local_government'
-        assert resp['data'][0]['type'] in ['federal', 'legislative', 'state', 'local_government']
+        assert resp['data'][0]['type'] == 'local government'
+        assert resp['data'][0]['type'] in ['federal', 'legislative', 'state', 'local government']
 
 
 def test_get_all_offices(test_client):
@@ -77,8 +77,8 @@ def test_update_office(test_client):
         assert rs.status_code == 200
         rs_data = rs.get_json()
         assert rs_data['data'][0]['name'] == 'woman rep'
-        assert rs_data['data'][0]['type'] == 'local_government'
-        assert rs_data['data'][0]['type'] in ['federal', 'legislative', 'state', 'local_government']
+        assert rs_data['data'][0]['type'] == 'local government'
+        assert rs_data['data'][0]['type'] in ['federal', 'legislative', 'state', 'local government']
 
 def test_delete_office(test_client):
     # tests delete office route

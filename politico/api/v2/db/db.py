@@ -4,7 +4,7 @@ import os
 class DB:
     """Database initialization class"""
 
-    def __init__(self):
+    def __init__(self, testing=False):
         self._db_name = 'politico'
         self._test_db_name = 'test_politico'
         self._password = ''
@@ -12,6 +12,7 @@ class DB:
         self._port = 5432
         self._user = 'erycoking'
         self._conn = None
+        self._testing = testing
 
     def tables(self):
         users = """
@@ -81,10 +82,10 @@ class DB:
         queries = [users, party, office, candidates, vote, petition]
         return queries
 
-    def connection(self, testing=False):
+    def connection(self):
         try:
             connection_string = None
-            if testing:
+            if self._testing:
                 connection_string = 'host={} port={} dbname={} user={} password={}'.format(
                     self._host, self._port, self._test_db_name, self._user, self._password
                 )
@@ -100,19 +101,15 @@ class DB:
 
     def initialize_db(self):
         conn = self.connection()
-        conn_2 = self.connection(True)
         print('Intitializing ...')
         try:
             cursor = conn.cursor()
-            cursor_2 = conn_2.cursor()
 
             queies = self.tables()
             for query in queies:
                 cursor.execute(query)
-                cursor_2.execute(query)
 
             conn.commit()
-            conn_2.commit()
 
             print('Database Inititialised')
         except (Exception, psycopg2.DatabaseError) as error:
@@ -302,6 +299,37 @@ class DB:
                 self._conn.close()
 
         return False
+
+
+    def tables_to_delete(self):
+
+        users = 'Drop table if exists users'
+        party = 'Drop table if exists party'
+        office = 'Drop table if exists office'
+        candidates = 'Drop table if exists candidates'
+        vote = 'Drop table if exists vote'
+        petition = 'Drop table if exists petition'
+
+        queries = [petition, vote, candidates, office, party, users]
+        return queries
+
+    def tear_down_test_database(self):
+        conn = self.connection()
+        print('Intitializing tear down...')
+        try:
+            cursor = conn.cursor()
+
+            queies = self.tables_to_delete()
+            for query in queies:
+                cursor.execute(query)
+
+            conn.commit()
+            print('Database pulled down successfully')
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if self._conn is not None:
+                self._conn.close()
         
 
     

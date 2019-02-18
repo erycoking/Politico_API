@@ -133,8 +133,8 @@ def validateKeysInParty(Party):
 
 def validateValueInParty(Party):
     # function for validating party input values 
-    image_url_pattern = re.compile(r'https?://(www\.)?(\w+)(\.\w+)/(\w+\.)(jpeg|png|jpg)')
-    address_pattern = re.compile(r'[a-zA-Z0-9]{2,25}[.,]*( [a-zA-Z0-9]{2,25})*.?')
+    image_url_pattern = re.compile(r'https?://(www\.)?(\w+)(\.\w+)/(\w+/)*(\w+\.)(jpeg|png|jpg)')
+    address_pattern = re.compile(r'[a-zA-Z0-9]{2,25}([.,]?( [a-zA-Z0-9]{2,25})*.?)*')
     name_url = re.compile(r'[A-Za-z]{2,25}( [A-Za-z]{2,25})*')
     msg = None
     if not re.fullmatch(name_url, Party['name']) or len(Party['name']) < 3:

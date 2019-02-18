@@ -22,30 +22,30 @@ def test_client():
 
 def add_user(test_client):
     user_data = {
-        "email": "eryco@gmail.com",
+        "email": "loningo@gmail.com",
         "firstname": "king",
-        "id_no": "12345608",
+        "id_no": "123456080",
         "is_admin": True,
         "lastname": "rozay",
-        "othername": "",
-        "passport_url": "file/passports/passport1.png",
-        "phone_number": "0712345678", 
-        "username":"baller",
+        "othername": "king",
+        "passport_url": "http://file.com/passports/passport1.png",
+        "phone_number": "0712340000", 
+        "username":"baller1",
         "password":"password"
     }
     return test_client.post(prefix+'/users', json=user_data)
 
 def update_user(test_client):
     user_data = {
-        "email": "eryco@gmail.com",
+        "email": "lomunyak@gmail.com",
         "firstname": "bigfish",
         "id_no": "12345608",
         "is_admin": True,
         "lastname": "rozay",
-        "othername": "",
-        "passport_url": "file/passports/passport1.png",
-        "phone_number": "0712345678",
-        "username":"baller",
+        "othername": "king",
+        "passport_url": "http://file.com/passports/passport1.png",
+        "phone_number": "0712345679",
+        "username":"baller675",
         "password":"password"
     }
     return test_client.patch(prefix+'/users/1', json=user_data)
@@ -100,7 +100,7 @@ def test_getting_all_users(test_client):
         first_user = users.get('1')
         print(users)
         assert 'id' in first_user and first_user['id'] == 1
-        assert 'firstname' in first_user and first_user['firstname'] == 'bigfish'
+        assert 'firstname' in first_user and first_user['firstname'] == 'king'
 
 def test_delete_user(test_client):
     """A test for deleting a single user"""
