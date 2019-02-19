@@ -49,7 +49,7 @@ def validate_candidate_info(cand):
         msg = 'party missing'
     elif 'candidate' not in cand:
         msg = 'candidate id missing'
-    elif not cand['office'].isdigit() or not cand['party'].isdigit() or not cand['candidate'].isdigit():
+    elif not (str(cand['office'])).isdigit() or not (str(cand['party'])).isdigit() or not (str(cand['candidate'])).isdigit():
         msg = 'all field should be of integer type'
     elif not user:
         msg = 'No user exists with that ID'

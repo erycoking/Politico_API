@@ -1,23 +1,7 @@
-"""tests for testing party routes"""
-
-# importing core modules
 import pytest
-
-# importing custom modules
-from .....config import create_app
+from ....base import test_client
 
 prefix = '/api/v1'
-
-@pytest.fixture(scope = 'module')
-def test_client():
-    """A fixture for creating a test_client"""
-    test_client = create_app().test_client()
-    cxt = create_app().app_context()
-    cxt.push()
-
-    yield test_client
-
-    cxt.pop()
 
 def add_party(test_client):
     party_data = {

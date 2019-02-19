@@ -1,34 +1,31 @@
 import psycopg2
-from politico.api.v2.db.db import DB
+from politico.api.v2.db import DB
 
-class CandidateTable:
+class CandidateTable(DB):
     """candidates table"""
-
-    def __init__(self):
-        self.db = DB()
-
+            
     def get_one_candidate(self, office_id, id):
-        candidate = self.db.fetch_one_using_two_values('candidates','office', office_id, 'id', id)
+        candidate = self.fetch_one_using_two_values('candidates','office', office_id, 'id', id)
         if candidate is not None:
             return self.candidate_data(candidate)
         return None
 
     def get_one_candidate_by_user(self, office_id, id):
-        candidate = self.db.fetch_one_using_two_values('candidates','office', office_id, 'id', id)
+        candidate = self.fetch_one_using_two_values('candidates','office', office_id, 'id', id)
         if candidate is not None:
             return self.candidate_data(candidate)
         return None
 
     def get_candidates(self, office_id):
         candidates = []
-        stored_candidates = self.db.fetch_all_using_int_key('candidates', 'office', office_id)
+        stored_candidates = self.fetch_all_using_int_key('candidates', 'office', office_id)
         for candidate in stored_candidates:
             candidates.append(self.candidate_data(candidate))
         return candidates
 
     def create_candidate(self, office_id, candidate_data):
 
-        conn = self.db.connection()
+        conn = self.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
@@ -50,7 +47,7 @@ class CandidateTable:
         return None
 
     def update_candidate(self, office_id, id, candidate_data):
-        conn =  self.db.connection()
+        conn =  self.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
@@ -72,7 +69,7 @@ class CandidateTable:
         return None
 
     def delete_candidate(self, office_id, id):
-        return self.db.delete_one('candidates', 'id', id)
+        return self.delete_one('candidates', 'id', id)
 
     def candidate_data(self, candidate):
         candidate_data = {}

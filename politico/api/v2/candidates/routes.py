@@ -119,9 +119,9 @@ def delete_candidate(current_user, office_id, id):
             }), 200)
         else:
             return make_response(jsonify({
-                'status': 500, 
-                'error' : 'Could not delete candidate with id:{}'.format(id)
-            }), 500)
+                'status': 400, 
+                'error' : 'update or delete on table "candidates" violates foreign key constraint.\nKey (id)=({}) is referenced on another table'.format(id)
+            }), 400)
 
 
 

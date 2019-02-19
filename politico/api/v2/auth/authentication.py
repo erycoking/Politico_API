@@ -1,4 +1,5 @@
 import jwt
+from instance.config import APP_CONFIG
 import datetime
 from functools import wraps
 from flask import Blueprint, redirect, request, make_response, jsonify
@@ -10,9 +11,8 @@ from politico.api.v1.user.routes import validate_keys_in_user_data
 from politico.api.v1.user.routes import validate_value_in_user_data
 
 user_tb = UserTable()
-secret_key = 'you_cant_see_me'
-
 auth = Blueprint('auth', __name__)
+
 
 
 def token_required(f):
@@ -30,7 +30,7 @@ def token_required(f):
             }), 403)
 
         try:
-            decoded_token = jwt.decode(token, secret_key)
+            decoded_token = jwt.decode(token, APP_CONFIG['secret'])
             user_id = decoded_token.get('public_id')
 
             current_user = user_tb.get_single_user(user_id)
@@ -70,7 +70,7 @@ def login():
         }), 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
 
     if check_password_hash(user['password'], credentials.password):
-        token = jwt.encode({'public_id': user['id'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, secret_key)
+        token = jwt.encode({'public_id': user['id'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, APP_CONFIG['secret'])
         return make_response(jsonify({
             'status': 200,
             'data': [{
@@ -114,7 +114,7 @@ def add_new_user():
                 'status': 400,
                 'error': new_user['error']
             }), 400)
-        token = jwt.encode({'public_id': new_user['id'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, secret_key)
+        token = jwt.encode({'public_id': new_user['id'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, APP_CONFIG['secret'])
         return make_response(jsonify({
             'status': 200,
             'data': [{

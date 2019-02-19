@@ -1,22 +1,8 @@
-"""test cases for office routes"""
-
-# import core module
 import pytest
-
-# import custom modules
-from .....config import create_app
+from ....base import test_client
 
 # prefix
 prefix = '/api/v1'
-
-@pytest.fixture(scope='module')
-def test_client():
-    # initializing the test client
-    test_client = create_app().test_client()
-    ctx = create_app().app_context()
-    ctx.push()
-    yield test_client
-    ctx.pop()
 
 def create_office(test_client):
     # creates office

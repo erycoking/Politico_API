@@ -82,5 +82,9 @@ def delete_user(current_user, id):
                     'message': 'user with id:{} deleted'.format(id)
                 }]
             }), 200)
-
+    else:
+        return make_response(jsonify({
+                'status': 400, 
+                'error' : 'update or delete on table "users" violates foreign key constraint.\nKey (id)=({}) is referenced on another table'.format(id)
+            }), 400)
          

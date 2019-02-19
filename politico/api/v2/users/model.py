@@ -1,51 +1,45 @@
 import psycopg2
 from werkzeug.security import check_password_hash, generate_password_hash
-from politico.api.v2.db.db import DB
+from politico.api.v2.db import DB
 
 
 """Interact with the user table in the database """
-class UserTable:
+class UserTable(DB):
     """class for user table interaction"""
 
-    def __init__(self, db=None):
-        if db:
-            self.db = db
-        else:
-            self.db = DB()
-
     def get_single_user(self, id):
-        user = self.db.fetch_one('users', 'id', id)
+        user = self.fetch_one('users', 'id', id)
         if user is not None:
             return self.user_data(user)
         return None
 
     def get_all_users(self):
         all_users = []
-        users = self.db.fetch_all('users')
+        users = self.fetch_all('users')
         for user in users:
             all_users.append(self.user_data(user))
         return all_users
 
     def get_user_with_email(self, email):
-        user = self.db.fetch_one_using_string('users', 'email', email)
+        user = self.fetch_one_using_string('users', 'email', email)
         if user is not None:
             return self.user_data(user)
         return None
 
     def get_user_with_username(self, name):
-        user = self.db.fetch_one_using_string('users', 'username', name)
+        user = self.fetch_one_using_string('users', 'username', name)
         if user is not None:
             return self.user_data(user)
         return None
         
     def get_user_with_string(self, search_key, value):
-        user = self.db.fetch_one_using_string('users', search_key, value)
+        user = self.fetch_one_using_string('users', search_key, value)
         if user is not None:
             return self.user_data(user)
         return None
 
     def get_user_with_int(self, search_key, value):
-        user = self.db.fetch_one('users', search_key, int(value))
+        user = self.fetch_one('users', search_key, int(value))
         if user is not None:
             return self.user_data(user)
         return None
@@ -54,7 +48,7 @@ class UserTable:
     def add_user(self, user_data):
         # add a new user to the users table
         
-        conn =  self.db.connection()
+        conn =  self.connection()
         print(conn)
         try:
             cursor = conn.cursor()
@@ -87,7 +81,7 @@ class UserTable:
     def update_user(self, id, user_data):
         # add a new user to the users list
 
-        conn = self.db.connection()
+        conn = self.connection()
         try:
             cursor = conn.cursor()
             password = generate_password_hash(user_data['password'], method='sha256')
@@ -114,7 +108,7 @@ class UserTable:
         return None
 
     def delete_user(self, id):
-        return self.db.delete_one('users', 'id', id)
+        return self.delete_one('users', 'id', id)
 
     def user_data(self, user):
         """gets user data"""

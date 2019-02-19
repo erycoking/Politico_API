@@ -105,8 +105,8 @@ def delete_office(current_user, id):
         else:
             return make_response(jsonify({
                 'status': 400, 
-                'error': 'Could not delete office with id:{}'.format(id)
-            }), 200)
+                'error' : 'update or delete on table "office" violates foreign key constraint.\nKey (id)=({}) is referenced on another table'.format(id)
+            }), 400)
     else:
         return make_response(jsonify({
             'status': 404, 

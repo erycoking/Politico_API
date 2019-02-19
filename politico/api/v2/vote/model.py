@@ -1,35 +1,32 @@
 import psycopg2
-from politico.api.v2.db.db import DB
+from politico.api.v2.db import DB
 import datetime
 
-class VotesTable:
+class VotesTable(DB):
     """vote table"""
 
-    def __init__(self):
-        self.db = DB()
-
     def get_one_vote(self, id):
-        vote = self.db.fetch_one('vote', 'id', id)
+        vote = self.fetch_one('vote', 'id', id)
         if vote is not None:
             return self.vote_data(vote)
         return None
 
     def get_one_vote_created_by_and_office(self, created_by, office):
-        vote = self.db.fetch_one_using_two_values('vote', 'created_by', created_by, 'office', office)
+        vote = self.fetch_one_using_two_values('vote', 'created_by', created_by, 'office', office)
         if vote is not None:
             return self.vote_data(vote)
         return None
 
     def get_votes(self):
         votes = []
-        stored_votes = self.db.fetch_all('vote')
+        stored_votes = self.fetch_all('vote')
         for vote in stored_votes:
             votes.append(self.vote_data(vote))
         return votes
 
     def create_vote(self, vote_data):
 
-        conn = self.db.connection()
+        conn = self.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
@@ -52,7 +49,7 @@ class VotesTable:
         return None
 
     def update_vote(self, id, vote_data):
-        conn =  self.db.connection()
+        conn =  self.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
@@ -74,7 +71,7 @@ class VotesTable:
         return None
 
     def delete_vote(self, id):
-        return self.db.delete_one('vote', 'id', id)
+        return self.delete_one('vote', 'id', id)
 
     def vote_data(self, vote):
         vote_data = {}
