@@ -35,11 +35,9 @@ https://dl.pstmn.io/download/latest/linux64
 
 Clone the repository using the following command
 ```
-git clone url
+git clone https://github.com/erycoking/Politico_API.git
 ``` 
 and replace the *url* with the relevant url
-
-[Github](https://github.com/erycoking/Politico_API.git)
 
 Change directrory to Politico_API using the following command 
 ```

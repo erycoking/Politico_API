@@ -3,8 +3,7 @@ import os
 
 """Entry to the application"""
 """Initializing application"""
-config = os.getenv('FLASK_ENV')
-app = create_app(config)
+app = create_app('development')
 
 """Setting debug to true"""
 if __name__ == '__main__':
