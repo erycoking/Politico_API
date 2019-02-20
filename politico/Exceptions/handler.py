@@ -1,15 +1,12 @@
-from flask import Flask, make_response, jsonify
-from werkzeug.exceptions import HTTPException
+from flask import Flask, Blueprint, make_response, jsonify
+from werkzeug.exceptions import default_exceptions
 
-class ExceptionHandler:
+error = Blueprint('error_handler', __name__)
 
-    def handle_error(self, e):
-        code = 500
-        if isinstance(e, HTTPException):
-            code = e.code
-
-        print(e)
-        return make_response(jsonify({
-                'status': code,
-                'error': str(e)
-            }), code)
+@error.errorhandler
+def handle_error(e):
+    desc = e.get_description(flask.request.environ)
+    return make_response(jsonify({
+            'status': e,
+            'error': desc
+        }), e)
