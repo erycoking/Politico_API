@@ -54,6 +54,7 @@ def token_required(f):
 
 @auth.route('/login', methods=['POST'])
 def login():
+
     credentials = request.authorization
 
     if not credentials or not credentials.username or not credentials.password:
