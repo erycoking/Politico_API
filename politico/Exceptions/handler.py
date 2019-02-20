@@ -3,10 +3,11 @@ from werkzeug.exceptions import default_exceptions
 
 error = Blueprint('error_handler', __name__)
 
-@error.errorhandler
-def handle_error(e):
-    desc = e.get_description(flask.request.environ)
+@error.app_errorhandler(Exception)
+def handle_error(error):
+    message = [str(x) for x in error.args]
+    status_code = error.status_code
     return make_response(jsonify({
-            'status': e,
-            'error': desc
-        }), e)
+            'status': status_code,
+            'error': message
+        }), status_code)
