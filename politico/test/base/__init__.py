@@ -18,24 +18,4 @@ def test_client():
     ctx.pop()
 
 
-# db = DB()
-
-# class BaseTest(unittest.TestCase):
-
-    
-    
-#     def setUp(self):
-#         self.app = create_app('testing')
-#         self.
-#         self.test_client = self.app.test_client
-#         self.ctx = self.app.app_context()
-#         self.app.app_context().push()
-#         db.initialize_db()
-#         self.added_user =self.
-
-#     # def tearDown(self):
-#     #     with self.app.app_context():
-#     #         db.tear_down_test_database
-#     #     self.app.app_context().pop()
-
 
