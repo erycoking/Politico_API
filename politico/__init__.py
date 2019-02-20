@@ -22,19 +22,20 @@ from politico.api.v2.candidates.routes import cand as cand_2
 from politico.api.v2.vote.routes import vote
 from politico.api.v2.petition.routes import petition
 from politico.api.v2.auth.authentication import auth
-
-from instance import config
-from instance.config import APP_CONFIG
+import politico.config
+from politico.config import APP_CONFIG
 from politico.Exceptions.handler import ExceptionHandler
 
-db = DB()
 
-def create_app(config='development'):
-    app = Flask(__name__)
 
+def create_app(config):
+
+    app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(APP_CONFIG[config])
+    app.app_context().push()
     # app.config.from_pyfile('config.py')
     
+    db = DB()
     db.initialize_db()
 
     for ex in default_exceptions:

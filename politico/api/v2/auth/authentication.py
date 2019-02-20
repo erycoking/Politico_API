@@ -1,5 +1,5 @@
 import jwt
-from instance.config import APP_CONFIG
+from politico.config import APP_CONFIG
 import datetime
 from functools import wraps
 from flask import Blueprint, redirect, request, make_response, jsonify
@@ -108,6 +108,7 @@ def add_new_user():
             'error': msg2
         }), 409)
     else:
+        print(user_tb.connection)
         new_user = user_tb.add_user(data)
         if 'error' in new_user:
             return make_response(jsonify({

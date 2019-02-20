@@ -18,6 +18,7 @@ class TestingConfig(Config):
 class DevelopmentConfig(Config):
     """ Defines configurations for development """
     DEBUG = True
+    DATABASE_URL = os.getenv('DATABASE_URL')
 
 
 class ProductionConfig(Config):

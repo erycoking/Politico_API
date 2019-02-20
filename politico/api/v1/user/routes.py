@@ -175,7 +175,6 @@ def validate_value_in_user_data(user):
             msg = 'Invalid password.\nPassword must be longer than 8 characters'
         else:
             msg = 'ok'
-        print(msg)
         return msg
     except Exception as error:
         err = {'error' : str(error)}

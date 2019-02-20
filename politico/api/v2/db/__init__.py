@@ -1,9 +1,7 @@
 import psycopg2
 import os
-from instance.config import APP_CONFIG
-
-CONFIG_NAME = os.getenv('FLASK_ENV')
-URL = APP_CONFIG[CONFIG_NAME].DATABASE_URL
+from politico.config import APP_CONFIG
+from flask import current_app
 
 
 class DB:
@@ -79,6 +77,11 @@ class DB:
 
     def connection(self):
         try:
+            if current_app.config['TESTING']:
+                URL = os.getenv('TEST_DATABASE_URL')
+            else:
+                URL = os.getenv('DATABASE_URL')
+
             conn = psycopg2.connect(URL)
             return conn
         except (Exception, psycopg2.DatabaseError) as error:
