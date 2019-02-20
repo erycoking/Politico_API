@@ -55,22 +55,22 @@ def token_required(f):
 @auth.route('/login', methods=['POST'])
 def login():
 
-    credentials = request.authorization
+    credentials = request.get_json()
 
-    if not credentials or not credentials.username or not credentials.password:
+    if not credentials or not credentials['username'] or not credentials['password']:
         return make_response(jsonify({
             'status': 401, 
             'error': 'could not verify'
         }), 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
 
-    user = user_tb.get_user_with_username(credentials.username)
+    user = user_tb.get_user_with_username(credentials['username'])
     if not user:
         return make_response(jsonify({
             'status': 401, 
             'error': 'Username or password incorrect'
         }), 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
 
-    if check_password_hash(user['password'], credentials.password):
+    if check_password_hash(user['password'], credentials['password']):
         token = jwt.encode({'public_id': user['id'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, APP_CONFIG['secret'])
         return make_response(jsonify({
             'status': 200,

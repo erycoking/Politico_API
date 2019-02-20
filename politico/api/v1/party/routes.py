@@ -138,11 +138,11 @@ def validateValueInParty(Party):
     name_url = re.compile(r'[A-Za-z]{2,25}( [A-Za-z]{2,25})*')
     msg = None
     if not re.fullmatch(name_url, Party['name']) or len(Party['name']) < 3:
-        msg = 'Invalid name.\nName should not be less than 3 characters and should contain only alphabets'
+        msg = 'Invalid name.Name should not be less than 3 characters and should contain only alphabets'
     elif not re.fullmatch(address_pattern, Party['hq_address']) or len(Party['hq_address']) < 3:
-        msg = 'Invalid hq_address.\nhq_address cannot be less than 3 characters and should contain only alphanumerics.'
+        msg = 'Invalid hq_address.hq_address cannot be less than 3 characters and should contain only alphanumerics.'
     elif not re.fullmatch(image_url_pattern, Party['logo_url']):
-        msg = 'Invalid logo_url.\nPlease give a valid url'
+        msg = 'Invalid logo_url.Please give a valid url'
     else:
         msg = 'ok'
 

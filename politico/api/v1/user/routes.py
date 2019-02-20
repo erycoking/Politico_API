@@ -154,25 +154,25 @@ def validate_value_in_user_data(user):
     try:
         msg = None
         if not user['firstname'].isalpha() or len(user['firstname']) < 3:
-            msg = 'firstname missing.\nFirstname must be longer than 2 characters and should contain only alphabets.'
+            msg = 'firstname missing.Firstname must be longer than 2 characters and should contain only alphabets.'
         elif not user['lastname'].isalpha() or len(user['lastname']) < 3:
-            msg = 'lastname missing.\nLastname must be longer than 2 characters and should contain only alphabets.'
+            msg = 'lastname missing.Lastname must be longer than 2 characters and should contain only alphabets.'
         elif 'othername' in user and (not user['othername'].isalpha() or len(user['othername']) < 3):
             msg = 'Othername must be longer than 2 characters and should contain only alphabets.'
         elif not re.fullmatch(email_pattern, user['email']):
-            msg = 'Invalid email.\nEmail a valid email'
+            msg = 'Invalid email.Enter a valid email'
         elif not re.fullmatch(phone_number_pattern, user['phone_number']):
-            msg = 'Invalid phone_number.\nEnter a valid kenyan phone number'
+            msg = 'Invalid phone_number.Enter a valid kenyan phone number'
         elif not re.fullmatch(image_url_pattern, user['passport_url']) or len(user['passport_url']) < 3:
-            msg = 'Invalid passport_url.\nPlease provide a valid url'
+            msg = 'Invalid passport_url.Please provide a valid url'
         elif not user['id_no'].isdigit() or len(user['id_no']) < 7:
-            msg = 'Invalid Id No.\nId No must be less than 7 digits and should contain no letters'
+            msg = 'Invalid Id No.Id No must be less than 7 digits and should contain no letters'
         elif not isinstance(user['is_admin'], bool):
             msg = 'is_admin must be a boolean'
         elif not user['username'].isalnum() or len(user['username']) < 3:
-            msg = 'Invalid username.\nUsername must be longer than 2 characters and should only contain alphanumeric characters'
+            msg = 'Invalid username.Username must be longer than 2 characters and should only contain alphanumeric characters'
         elif not user['password'] or len(user['password']) < 8:
-            msg = 'Invalid password.\nPassword must be longer than 8 characters'
+            msg = 'Invalid password.Password must be longer than 8 characters'
         else:
             msg = 'ok'
         return msg

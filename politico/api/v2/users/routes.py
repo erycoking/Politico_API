@@ -60,9 +60,9 @@ def update_user(current_user, id):
         }), 400)
     else:
         return make_response(jsonify({
-            'status': 201,
+            'status': 200,
             'data': [updated_user]
-        }), 201)
+        }), 200)
 
     
 @user.route('/users/<int:id>', methods=['DELETE'])

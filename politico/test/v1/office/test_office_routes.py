@@ -1,5 +1,5 @@
 import pytest
-from ....base import test_client
+from ...base import test_client
 
 # prefix
 prefix = '/api/v1'
