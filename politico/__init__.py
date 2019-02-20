@@ -38,8 +38,10 @@ def create_app(config):
     db = DB()
     db.initialize_db()
 
+    Handler = ExceptionHandler()
+
     for ex in default_exceptions:
-        app.register_error_handler(ex, ExceptionHandler)
+        app.register_error_handler(ex, Handler.handle_error(ex))
 
     prefix = '/api/v1'
 

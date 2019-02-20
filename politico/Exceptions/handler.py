@@ -3,7 +3,6 @@ from werkzeug.exceptions import HTTPException
 
 class ExceptionHandler:
 
-
     def handle_error(self, e):
         code = 500
         if isinstance(e, HTTPException):
