@@ -24,7 +24,7 @@ from politico.api.v2.petition.routes import petition
 from politico.api.v2.auth.authentication import auth
 import politico.config
 from politico.config import APP_CONFIG
-from politico.Exceptions.handler import error
+from politico.Exceptions.handler import handle_error
 
 
 
@@ -39,7 +39,7 @@ def create_app(config):
     db.initialize_db()
 
     for ex in default_exceptions:
-        app.register_error_handler(ex, error)
+        app.register_error_handler(ex, handle_error(ex))
 
     prefix = '/api/v1'
 
