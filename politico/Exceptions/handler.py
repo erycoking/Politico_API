@@ -5,7 +5,8 @@ error = Blueprint('error_handler', __name__)
 
 @error.app_errorhandler(Exception)
 def handle_error(err):
-    message = [str(x) for x in err.args]
+    # message = [str(x) for x in err.args]
+    message = str(err)
     status_code = 500
     return make_response(jsonify({
             'status': status_code,
