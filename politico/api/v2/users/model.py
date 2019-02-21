@@ -49,7 +49,7 @@ class UserTable(DB):
         # add a new user to the users table
         
         conn =  self.connection()
-        phone_no = user_data['phone_number']
+        phone_no = str(user_data['phone_number'])
         phone = None
         if '+' in phone_no:
             phone = phone_no[1:]
@@ -59,7 +59,6 @@ class UserTable(DB):
         try:
             cursor = conn.cursor()
             password = generate_password_hash(user_data['password'], method='sha256')
-            password = generate_password_hash('admin123', method='sha256')
             cursor.execute( 
                 """insert into users(firstname, lastname, othername, email, phone_number, 
                 passport_url, id_no, is_admin, username, password) values(%s, %s, %s, 
@@ -70,9 +69,9 @@ class UserTable(DB):
                     password
                 )
             )
+            conn.commit()
             user_id = cursor.fetchone()[0]
             user_data = self.get_single_user(user_id)
-            conn.commit()
             return user_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             err = {'error': str(error)}
@@ -101,9 +100,9 @@ class UserTable(DB):
                     password, id
                 )
             )
+            conn.commit()
             user_id = cursor.fetchone()[0]
             print(user_id)
-            conn.commit()
             user_details = self.get_single_user(user_id)
             return user_details      
         except (Exception, psycopg2.DatabaseError) as error:

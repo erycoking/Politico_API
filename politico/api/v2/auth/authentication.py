@@ -109,7 +109,6 @@ def add_new_user():
             'error': msg2
         }), 409)
     else:
-        print(user_tb.connection)
         new_user = user_tb.add_user(data)
         if 'error' in new_user:
             return make_response(jsonify({
