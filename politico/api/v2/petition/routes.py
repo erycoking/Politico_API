@@ -3,7 +3,7 @@ from politico.api.v2.petition.model import PetitionTable
 from politico.api.v2.office.model import OfficeTable
 from politico.api.v2.users.model import UserTable
 
-from politico.api.v2.auth.authentication import token_required
+from politico.api.v2.auth.authentication import token_required, is_admin
 
 petition = Blueprint('petitions', __name__)
 
@@ -100,6 +100,7 @@ def update_petition(current_user, id):
 @petition.route('/petitions/<int:id>', methods=['DELETE'])
 @token_required
 def delete_petition(current_user, id):
+    is_admin(current_user)
     existing_petition = petition_tb.get_one_petition(id)
     if not existing_petition:
         return make_response(jsonify({

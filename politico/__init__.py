@@ -22,7 +22,7 @@ from politico.api.v2.candidates.routes import cand as cand_2
 from politico.api.v2.vote.routes import vote
 from politico.api.v2.petition.routes import petition
 from politico.api.v2.auth.authentication import auth
-import politico.config
+from politico import config
 from politico.config import APP_CONFIG
 from politico.Exceptions.handler import error
 

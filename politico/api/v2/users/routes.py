@@ -4,7 +4,7 @@ from politico.api.v2.users.model import UserTable
 from politico.api.v1.user.routes import validate_keys_in_user_data
 from politico.api.v1.user.routes import validate_value_in_user_data
 
-from politico.api.v2.auth.authentication import token_required
+from politico.api.v2.auth.authentication import token_required, is_admin
 from politico.api.v2.auth.authentication import check_if_user_exists
 
 user = Blueprint('users', __name__)
@@ -37,6 +37,12 @@ def get_all(current_user):
 @user.route('/users/<int:id>', methods=['PATCH'])
 @token_required
 def update_user(current_user, id):
+    if bool(current_user['is_admin']) != True and current_user['id'] != id:
+        return make_response(jsonify({
+            'status': 401,
+            'error': 'You can only edit your own data'
+        }), 401)
+        
     data = request.get_json()
     msg = validate_keys_in_user_data(data)
     if msg != 'ok':
@@ -67,7 +73,8 @@ def update_user(current_user, id):
     
 @user.route('/users/<int:id>', methods=['DELETE'])
 @token_required
-def delete_user(current_user, id):  
+def delete_user(current_user, id):
+    is_admin(current_user)  
     user_exists = user_tb.get_single_user(id)
     if not user_exists:
         return make_response(jsonify({

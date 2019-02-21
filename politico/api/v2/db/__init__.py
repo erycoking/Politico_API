@@ -92,19 +92,44 @@ class DB:
         print('Intitializing ...')
         try:
             cursor = conn.cursor()
-
             queies = self.tables()
             for query in queies:
                 cursor.execute(query)
 
             conn.commit()
-
+            self.create_admin()
             print('Database Inititialised')
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
         finally:
             if conn is not None:
                 conn.close()
+
+    def create_admin(self):
+        conn = self.connection()
+        try:
+            cursor = conn.cursor()
+            cursor.execute("select * from users where username = 'pheonix'")
+            user = cursor.fetchone()
+            # print(user)
+            if user is None:
+                print('Adding admin ...............')
+                admin = os.getenv('ADMIN')
+                query_two = """insert into users(firstname, lastname, othername, email, phone_number, 
+                    passport_url, id_no, is_admin, username, password) values({}) RETURNING id;""".format(admin)
+                cursor.execute(query_two)
+                conn.commit()
+                admin_added = cursor.fetchone()[0]
+                if admin_added:
+                    print('Admin successfully added')
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
+        finally:
+            if conn is not None:
+                conn.close()
+
+        return None
 
     def fetch_one(self, tb_name, search_key, value):
         conn = self.connection()

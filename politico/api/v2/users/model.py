@@ -49,23 +49,29 @@ class UserTable(DB):
         # add a new user to the users table
         
         conn =  self.connection()
-        print(conn)
+        phone_no = user_data['phone_number']
+        phone = None
+        if '+' in phone_no:
+            phone = phone_no[1:]
+        else:
+            phone = phone_no
+
         try:
             cursor = conn.cursor()
             password = generate_password_hash(user_data['password'], method='sha256')
+            password = generate_password_hash('admin123', method='sha256')
             cursor.execute( 
                 """insert into users(firstname, lastname, othername, email, phone_number, 
                 passport_url, id_no, is_admin, username, password) values(%s, %s, %s, 
                 %s, %s, %s, %s, %s, %s, %s) RETURNING id;""", (
                     user_data['firstname'], user_data['lastname'], user_data['othername'], 
-                    user_data['email'], int(user_data['phone_number']), user_data['passport_url'], 
-                     int(user_data['id_no']), bool(user_data['is_admin']),user_data['username'], 
+                    user_data['email'], int(phone), user_data['passport_url'], 
+                     int(user_data['id_no']), bool(0), user_data['username'], 
                     password
                 )
             )
             user_id = cursor.fetchone()[0]
-            user_data['id'] = user_id
-            user_data['password'] = password
+            user_data = self.get_single_user(user_id)
             conn.commit()
             return user_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
@@ -91,15 +97,15 @@ class UserTable(DB):
                 password = %s where id = %s RETURNING id;""", (
                     user_data['firstname'], user_data['lastname'], user_data['othername'], 
                     user_data['email'], int(user_data['phone_number']), user_data['passport_url'], 
-                    int(user_data['id_no']), bool(user_data['is_admin']), user_data['username'], 
+                    int(user_data['id_no']), bool(0), user_data['username'], 
                     password, id
                 )
             )
             user_id = cursor.fetchone()[0]
-            user_data['id'] = user_id
-            user_data['password'] = password
+            print(user_id)
             conn.commit()
-            return user_data            
+            user_details = self.get_single_user(user_id)
+            return user_details      
         except (Exception, psycopg2.DatabaseError) as error:
             err = {'error': str(error)}
             print(err)

@@ -126,6 +126,13 @@ def add_new_user():
         }))
         
 
+def is_admin(current_user):
+    if current_user['is_admin'] == True:
+        return make_response(jsonify({
+                'status': 401,
+                'error': 'Only admin can perform this function'
+            }), 401)
+
 
 def check_if_user_exists(data):
     msg = None

@@ -1,11 +1,6 @@
 language: python
 python: 
   - "3.6"
-
-env:
-  global:
-    - SECRET_KEY='QeVYWfId8LODTNgMRl4-hnAdBYdhuZy_7o9RlfaUKhWdl2G5xEVXfYaEEbJ8QWnNeiDGgQn6wjGmscU7wAVhrA'
-    - TEST_DATABASE_URL='postgresql://erycoking:king*1234@127.0.0.1/test_politico'
   
 # command to install dependencies
 install:
