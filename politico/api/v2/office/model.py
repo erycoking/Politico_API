@@ -83,16 +83,20 @@ class OfficeTable(DB):
         # get all candidates in that office
         # get total votes for that votes candidate
         # return the results
-        office = self.fetch_one('office', 'id', id)
+        office = self.get_one_office(id)
 
-        candidates = self.fetch_all_using_int_key('candidates', 'office', office[0])
+        candidates = self.fetch_all_using_int_key('candidates', 'office', office['id'])
         for cand in candidates:
+            print(cand)
+            cand_detail = self.fetch_one('candidates', 'id', cand[0])
+            user_details = self.fetch_one('users', 'id', cand_detail[3])
+            print(user_details)
             votes = self.fetch_all_using_int_key('vote', 'candidate', cand[0])
             total_vote_for_specific_candidate = len(votes)
 
             candidate_result = {
-                'office': office[0], 
-                'candidate': cand[0], 
+                'office': office['name'], 
+                'candidate': user_details[1], 
                 'result': total_vote_for_specific_candidate
             }
 

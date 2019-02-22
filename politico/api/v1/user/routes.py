@@ -147,7 +147,11 @@ def validate_value_in_user_data(user):
     
     email_pattern = re.compile(r'[^@]+@[^@]+\.[^@]+')
     image_url_pattern = re.compile(r'https?://(www\.)?(\w+)(\.\w+)/(\w+/)*(\w+\.)(jpeg|png|jpg)')
-    phone_number_pattern = re.compile(r'^(\+2547|2547|07)\d{8}$')
+    phone_number_pattern = re.compile(r'^(2547|07)\d{8}$')
+
+    if 'othername' in user:
+        if not user['othername'].isalpha() or len(user['othername']) < 3:
+            return 'Othername must be longer than 2 characters and should contain only alphabets.'
   
     try:
         msg = None
@@ -155,15 +159,13 @@ def validate_value_in_user_data(user):
             msg = 'firstname missing.Firstname must be longer than 2 characters and should contain only alphabets.'
         elif not user['lastname'].isalpha() or len(user['lastname']) < 3:
             msg = 'lastname missing.Lastname must be longer than 2 characters and should contain only alphabets.'
-        elif 'othername' in user and (not user['othername'].isalpha() or len(user['othername']) < 3):
-            msg = 'Othername must be longer than 2 characters and should contain only alphabets.'
         elif not re.fullmatch(email_pattern, user['email']):
             msg = 'Invalid email.Enter a valid email'
-        elif not re.fullmatch(phone_number_pattern, user['phone_number']):
+        elif not re.fullmatch(phone_number_pattern, str(user['phone_number'])):
             msg = 'Invalid phone_number.Enter a valid kenyan phone number'
         elif not re.fullmatch(image_url_pattern, user['passport_url']) or len(user['passport_url']) < 3:
             msg = 'Invalid passport_url.Please provide a valid url'
-        elif not user['id_no'].isdigit() or len(user['id_no']) < 7:
+        elif not str(user['id_no']).isdigit() or len(str(user['id_no'])) < 7:
             msg = 'Invalid Id No.Id No must be less than 7 digits and should contain no letters'
         elif not user['username'].isalnum() or len(user['username']) < 3:
             msg = 'Invalid username.Username must be longer than 2 characters and should only contain alphanumeric characters'

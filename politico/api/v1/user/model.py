@@ -153,8 +153,6 @@ class User:
         user_data['passport_url'] = self._passport_url
         user_data['is_admin'] = self._is_admin
         user_data['id_no'] = self._id_no
-        user_data['username'] = self._username
-        user_data['password'] = self._password
         return user_data
 
 """Acts as a table for storing users """

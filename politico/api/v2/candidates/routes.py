@@ -73,6 +73,13 @@ def get_one_candidate(current_user, office_id, id):
 @cand.route('/office/<int:office_id>/candidates/<int:id>', methods=['PATCH'])
 @token_required
 def update_candidate(current_user, office_id, id):
+    admin = bool(current_user['is_admin'])
+    if not (admin):
+        print("I am in")
+        return make_response(jsonify({
+                'status': 401,
+                'error': 'Only admin can perform this function'
+            }), 401)
     existing_candidate = cand_tb.get_one_candidate(office_id, id)
     if not existing_candidate:
         return make_response(jsonify({
@@ -103,6 +110,13 @@ def update_candidate(current_user, office_id, id):
 @cand.route('/office/<int:office_id>/candidates/<int:id>', methods=['DELETE'])
 @token_required
 def delete_candidate(current_user, office_id, id):
+    admin = bool(current_user['is_admin'])
+    if not (admin):
+        print("I am in")
+        return make_response(jsonify({
+                'status': 401,
+                'error': 'Only admin can perform this function'
+            }), 401)
     existing_candidate = cand_tb.get_one_candidate(office_id, id)
     if not existing_candidate:
         return make_response(jsonify({
@@ -120,18 +134,19 @@ def delete_candidate(current_user, office_id, id):
         else:
             return make_response(jsonify({
                 'status': 400, 
-                'error' : 'update or delete on table "candidates" violates foreign key constraint.\nKey (id)=({}) is referenced on another table'.format(id)
+                'error' : 'update or delete on table "candidates" violates foreign key constraint. Key (id)=({}) is referenced on another table'.format(id)
             }), 400)
 
 
 
 def validate_candidate_info(cand):
+    name_url = re.compile(r'[A-Za-z]{2,25}( [A-Za-z]{2,25})*')
     msg = None
     if 'party' not in cand:
         msg = 'party missing'
-    elif not (str(cand['party'])).isdigit():
-        msg = 'all field should be of integer type'
-    elif not party_tb.get_one_party(cand['party']):
+    elif not re.fullmatch(name_url, cand['party']):
+        msg = 'Invalid party name. Party name should be a string'
+    elif not party_tb.get_one_party_by_name(cand['party']):
         msg = 'Party does not exist'
     else:
         msg = 'ok'

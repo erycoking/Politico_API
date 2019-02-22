@@ -128,7 +128,6 @@ class DB:
         finally:
             if conn is not None:
                 conn.close()
-
         return None
 
     def fetch_one(self, tb_name, search_key, value):

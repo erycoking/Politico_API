@@ -140,6 +140,7 @@ def test_update_users(test_client, token, user_2):
             'Authorization': 'Bearer {}'.format(token)
         }, json=user_2
     )
+    print(response.get_json())
     assert response.status_code == 200
     data = standard(response)
     user = data['data'][0]

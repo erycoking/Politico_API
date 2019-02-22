@@ -2,7 +2,7 @@ from flask import Blueprint, request, make_response, jsonify
 from politico.api.v2.office.model import OfficeTable
 from politico.api.v1.office.route import validate_office_data
 
-from politico.api.v2.auth.authentication import token_required, is_admin
+from politico.api.v2.auth.authentication import token_required
 
 # blueprint
 office = Blueprint('offices', __name__)
@@ -12,7 +12,13 @@ office_tb = OfficeTable()
 @office.route('/offices', methods=['POST'])
 @token_required
 def create_office(current_user):
-    is_admin(current_user)
+    admin = bool(current_user['is_admin'])
+    if not (admin):
+        print("I am in")
+        return make_response(jsonify({
+                'status': 401,
+                'error': 'Only admin can perform this function'
+            }), 401)
     office_data = request.get_json()
     msg = validate_office_data(office_data)
     if msg != 'ok':
@@ -65,7 +71,13 @@ def get_single_office(current_user, id):
 @office.route('/offices/<int:id>', methods=['PATCH'])
 @token_required
 def update_office(current_user, id):
-    is_admin(current_user)
+    admin = bool(current_user['is_admin'])
+    if not (admin):
+        print("I am in")
+        return make_response(jsonify({
+                'status': 401,
+                'error': 'Only admin can perform this function'
+            }), 401)
     office_data = request.get_json()
     msg = validate_office_data(office_data)
     if msg != 'ok':
@@ -95,7 +107,13 @@ def update_office(current_user, id):
 @office.route('/offices/<int:id>', methods=['DELETE'])
 @token_required
 def delete_office(current_user, id):
-    is_admin(current_user)
+    admin = bool(current_user['is_admin'])
+    if not (admin):
+        print("I am in")
+        return make_response(jsonify({
+                'status': 401,
+                'error': 'Only admin can perform this function'
+            }), 401)
     office = office_tb.get_one_office(id)
     if office:
         if office_tb.delete_office(id):

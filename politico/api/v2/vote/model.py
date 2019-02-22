@@ -1,6 +1,9 @@
 import psycopg2
 from politico.api.v2.db import DB
 import datetime
+from politico.api.v2.office.model import OfficeTable
+from politico.api.v2.users.model import UserTable
+from politico.api.v2.candidates.model import CandidateTable
 
 class VotesTable(DB):
     """vote table"""
@@ -25,19 +28,20 @@ class VotesTable(DB):
         return votes
 
     def create_vote(self, vote_data):
+        office_tb = OfficeTable()
+        office = office_tb.get_one_office_by_name(vote_data['office'])
 
         conn = self.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
                 """insert into vote(created_by, office, candidate) values(%s, %s, %s) RETURNING id;""",  
-                 (vote_data.get('created_by'), vote_data.get('office'), vote_data.get('candidate'))
+                 (vote_data['created_by'], office['id'], vote_data['candidate'])
                 )
-            vote_data['id'] = cursor.fetchone()[0]
-            date = datetime.datetime.now().date()
-            vote_data['created_on'] = str(date)
             conn.commit()
-            return vote_data
+            vote_id = cursor.fetchone()[0]
+            vote_details = self.get_one_vote(vote_id)
+            return vote_details
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             err = {'error': str(error)}
             print(err)
@@ -49,17 +53,19 @@ class VotesTable(DB):
         return None
 
     def update_vote(self, id, vote_data):
+        office_tb = OfficeTable()
+        office = office_tb.get_one_office_by_name(vote_data['office'])
         conn =  self.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
                 """update vote set created_by = %s, office = %s, candidate = %s where id = %s RETURNING id;""", 
-                (vote_data.get('created_by'), vote_data.get('office'), vote_data.get('candidate'), id)
+                (vote_data['created_by'], office['office'], vote_data['candidate'], id)
             )
-            # vote_data['id'] = cursor.fetchone()[0]
             conn.commit()
-            vote_data = self.get_one_vote(id)
-            return vote_data
+            vote_id = cursor.fetchone()[0]
+            vote_details = self.get_one_vote(vote_id)
+            return vote_details
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             err = {'error': str(error)}
             print(err)
@@ -74,11 +80,16 @@ class VotesTable(DB):
         return self.delete_one('vote', 'id', id)
 
     def vote_data(self, vote):
+        user_tb = UserTable()
+        user = user_tb.get_single_user(vote[2])
+        office_tb = OfficeTable()
+        office = office_tb.get_one_office(vote[3])
+        cand_tb = CandidateTable()
+        cand = cand_tb.get_single_candidate(vote[4])
         vote_data = {}
         vote_data['id'] = vote[0]
         vote_data['created_on'] = str(vote[1])
-        vote_data['created_by'] = vote[2]
-        vote_data['office'] = vote[3]
-        vote_data['candidate'] = vote[4]
-        print(vote_data)
+        vote_data['created_by'] =user['firstname']
+        vote_data['office'] = office['name']
+        vote_data['candidate'] = cand['candidate']
         return vote_data
