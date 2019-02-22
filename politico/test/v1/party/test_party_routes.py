@@ -1,28 +1,12 @@
-"""tests for testing party routes"""
-
-# importing core modules
 import pytest
-
-# importing custom modules
-from .....config import create_app
+from ...base import test_client
 
 prefix = '/api/v1'
-
-@pytest.fixture(scope = 'module')
-def test_client():
-    """A fixture for creating a test_client"""
-    test_client = create_app().test_client()
-    cxt = create_app().app_context()
-    cxt.push()
-
-    yield test_client
-
-    cxt.pop()
 
 def add_party(test_client):
     party_data = {
         "hq_address": "Westlands, Nairobi",
-        "logo_url": "logo/logo.jpg",
+        "logo_url": "http://logo.com/logo.jpg",
         "name": "jubilee"
     }
     return test_client.post(prefix+'/parties', json=party_data)
@@ -30,8 +14,8 @@ def add_party(test_client):
 def update_party(test_client):
     party_data = {
         "hq_address": "Thika road, Nairobi",
-        "logo_url": "logo/logo.jpg",
-        "name": "jubilee"
+        "logo_url": "http://logo.com/logo/logo.png",
+        "name": "wiper"
     }
     return test_client.patch(prefix+'/parties/1', json=party_data)
 
@@ -51,7 +35,7 @@ def test_add_party(test_client):
 def test_get_single_party(test_client):
     """A test for getting a single party"""
     with test_client as c:
-        add_party(c)
+        # add_party(c)
         response = c.get(prefix+'/parties/1')
         assert response.status_code == 200
         data  = response.get_json()
@@ -71,7 +55,7 @@ def test_update_party(test_client):
         assert 'data' in data
         party = data.get('data')[0]
         assert 'id' in party and party['id'] == 1
-        assert 'name' in party and party['name'] == 'jubilee'
+        assert 'name' in party and party['name'] == 'wiper'
 
 def test_getting_all_partys(test_client):
     """A test for getting all party"""

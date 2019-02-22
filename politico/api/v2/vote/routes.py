@@ -24,9 +24,16 @@ def add_vote(current_user):
             'error': msg
         }), 400)
     else:
-        vote = votes_tb.get_one_vote_created_by(vote_data.get('created_by'))
+        vote = votes_tb.get_one_vote_created_by_and_office(current_user['id'], vote_data['office'])
         if not vote:
+            vote_data['created_by'] = current_user['id']
             added_vote = votes_tb.create_vote(vote_data)
+            print(added_vote)
+            if 'error' in added_vote:
+                return make_response(jsonify({
+                    'status':400, 
+                    'error': added_vote['error']
+                }), 400)
             return make_response(jsonify({
                 'status': 200, 
                 'data': [added_vote]
@@ -34,7 +41,7 @@ def add_vote(current_user):
         else:
             return make_response(jsonify({
                 'status': 409, 
-                'error': 'cannot vote twice'
+                'error': 'cannot vote twice for the same office'
             }), 409)
 
 
@@ -80,7 +87,13 @@ def update_vote(current_user, id):
             'error': msg
         }), 400)
 
+    vote_data['created_by'] = current_user['id']
     updated_vote = votes_tb.update_vote(id, vote_data)
+    if 'error' in updated_vote:
+        return make_response(jsonify({
+            'status':400, 
+            'error': updated_vote['error']
+        }), 400)
     return make_response(jsonify({
         'status': 200, 
         'data': [updated_vote]
@@ -105,14 +118,13 @@ def delete_vote(current_user, id):
             }), 200)
         else:
             return make_response(jsonify({
-                'status': 500, 
-                'error' : 'Could not delete vote with id:{}'.format(id)
-            }), 500)
+                'status': 400, 
+                'error' : 'update or delete on table "vote" violates foreign key constraint.\nKey (id)=({}) is referenced on another table'.format(id)
+            }), 400)
 
 
 
 def validate_vote_info(vote):
-    user = user_tb.get_single_user(vote['created_by'])
     office = office_tb.get_one_office(vote['office'])
     candidate = cand_tb.get_one_candidate(vote['office'], vote['candidate'])
     msg = None
@@ -122,16 +134,12 @@ def validate_vote_info(vote):
         msg = 'candidate missing'
     elif 'office' not in vote:
         msg = 'office missing'
-    elif 'created_by' not in vote:
-        msg = 'user id missing'
-    elif not isinstance(vote['created_by'], int) or not isinstance(vote['candidate'], int) or not isinstance(vote['office'], int):
+    elif not (str(vote['candidate'])).isdigit() or not (str(vote['candidate'])).isdigit():
         msg = 'all field should be of integer type'
-    elif not user:
-        msg = 'User does not exist'
     elif not office:
         msg =  'Office does not exist'
     elif not candidate:
-        msg = 'candidate does not exist'
+        msg = 'No candidate by id::{} is running for office with id::{}'.format(vote['candidate'], vote['office'])
     else:
         msg = 'ok'
     return msg

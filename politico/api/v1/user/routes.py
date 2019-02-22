@@ -1,6 +1,8 @@
 from flask import Blueprint, make_response, request, jsonify
 from politico.api.v1.user.model import UserTable
 
+import re
+
 
 user = Blueprint('user', __name__)
 
@@ -44,13 +46,6 @@ def addUser():
             'error': msg1
         }), 400)
 
-    msg2 = validate_user_input_type(user_data)
-    if msg2 != 'ok':
-        return make_response(jsonify({
-            'status': 400, 
-            'error': msg2
-        }), 400)
-
     user1 = user_table.get_user_with_email(user_data['email'])
     if not user1:
         added_user = user_table.add_user(user_data)
@@ -80,13 +75,6 @@ def update(id):
         return make_response(jsonify({
             'status': 400, 
             'error': msg1
-        }), 400)
-
-    msg2 = validate_user_input_type(user_data)
-    if msg2 != 'ok':
-        return make_response(jsonify({
-            'status': 400, 
-            'error': msg2
         }), 400)
 
     user = user_table.users.get(id)
@@ -158,38 +146,40 @@ def validate_keys_in_user_data(user):
     return msg
 
 def validate_value_in_user_data(user):
-    msg = None
-    if not user['firstname'] or len(user['firstname']) < 3:
-        msg = 'firstname missing.\nFirstname must be longer than 2 characters'
-    elif not user['lastname'] or len(user['lastname']) < 3:
-        msg = 'lastname missing.\nLastname must be longer than 2 characters'
-    elif not user['email'] or len(user['email']) < 3:
-        msg = 'Invalid email.\nEmail must be longer than 2 characters and must contain a @ symbol'
-    elif not user['phone_number'] or len(user['phone_number']) < 10:
-        msg = 'Invalid phone_number.\nId No must be 10 characters or longer'
-    elif not user['passport_url'] or len(user['passport_url']) < 3:
-        msg = 'Invalid passport_url.\nId No must be longer than 2 characters'
-    elif not user['id_no'] or len(user['id_no']) < 3:
-        msg = 'Invalid Id No.\nId No must be longer than 2 characters'
-    elif not user['username'] or len(user['username']) < 3:
-        msg = 'Invalid username.\nUsername must be longer than 2 characters'
-    elif not user['password'] or len(user['password']) < 3:
-        msg = 'Invalid password.\nPassword must be longer than 2 characters'
-    else:
-        msg = 'ok'
-    return msg
-
-def validate_user_input_type(user):
-    msg = None
-    if not user['phone_number'].isdigit():
-        msg = 'phone_number must be a number'
-    elif not isinstance(user['is_admin'], bool):
-        msg = 'is_admin must be a boolean'
-    elif not user['id_no'].isdigit():
-        msg = 'id_no must be a number'
-    else:
-        msg = 'ok'
-    return msg
+    
+    email_pattern = re.compile(r'[^@]+@[^@]+\.[^@]+')
+    image_url_pattern = re.compile(r'https?://(www\.)?(\w+)(\.\w+)/(\w+/)*(\w+\.)(jpeg|png|jpg)')
+    phone_number_pattern = re.compile(r'^(\+2547|2547|07)\d{8}$')
+  
+    try:
+        msg = None
+        if not user['firstname'].isalpha() or len(user['firstname']) < 3:
+            msg = 'firstname missing.Firstname must be longer than 2 characters and should contain only alphabets.'
+        elif not user['lastname'].isalpha() or len(user['lastname']) < 3:
+            msg = 'lastname missing.Lastname must be longer than 2 characters and should contain only alphabets.'
+        elif 'othername' in user and (not user['othername'].isalpha() or len(user['othername']) < 3):
+            msg = 'Othername must be longer than 2 characters and should contain only alphabets.'
+        elif not re.fullmatch(email_pattern, user['email']):
+            msg = 'Invalid email.Enter a valid email'
+        elif not re.fullmatch(phone_number_pattern, user['phone_number']):
+            msg = 'Invalid phone_number.Enter a valid kenyan phone number'
+        elif not re.fullmatch(image_url_pattern, user['passport_url']) or len(user['passport_url']) < 3:
+            msg = 'Invalid passport_url.Please provide a valid url'
+        elif not user['id_no'].isdigit() or len(user['id_no']) < 7:
+            msg = 'Invalid Id No.Id No must be less than 7 digits and should contain no letters'
+        elif not isinstance(user['is_admin'], bool):
+            msg = 'is_admin must be a boolean'
+        elif not user['username'].isalnum() or len(user['username']) < 3:
+            msg = 'Invalid username.Username must be longer than 2 characters and should only contain alphanumeric characters'
+        elif not user['password'] or len(user['password']) < 8:
+            msg = 'Invalid password.Password must be longer than 8 characters'
+        else:
+            msg = 'ok'
+        return msg
+    except Exception as error:
+        err = {'error' : str(error)}
+        print(err)
+        return err
 
 
 

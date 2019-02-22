@@ -1,34 +1,31 @@
 import psycopg2
-from politico.api.v2.db.db import DB
+from politico.api.v2.db import DB
 
-class PartyTable:
+class PartyTable(DB):
     """class for manipulating party table"""
 
-    def __init__(self):
-        self.db = DB()
-
     def get_one_party(self, id):
-        party = self.db.fetch_one('party', 'id', id)
+        party = self.fetch_one('party', 'id', id)
         if party is not None:
             return self.party_data(party)
         return None
 
     def get_one_party_by_name(self, name):
-        party = self.db.fetch_one_using_string('party', 'name', name)
+        party = self.fetch_one_using_string('party', 'name', name)
         if party is not None:
             return self.party_data(party)
         return None
 
     def get_parties(self):
         parties = []
-        stored_parties = self.db.fetch_all('party')
+        stored_parties = self.fetch_all('party')
         for party in stored_parties:
             parties.append(self.party_data(party))
         return parties
 
     def create_party(self, party_data):
 
-        conn = self.db.connection()
+        conn = self.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
@@ -40,8 +37,9 @@ class PartyTable:
             conn.commit()
             return party_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
-            print(error)
-            return None
+            err = {'error' : str(error)}
+            print(err)
+            return err
         finally:
             if conn is not None:
                 conn.close()
@@ -49,7 +47,7 @@ class PartyTable:
         return None
 
     def update_party(self, id, party_data):
-        conn =  self.db.connection()
+        conn =  self.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
@@ -60,8 +58,9 @@ class PartyTable:
             conn.commit()
             return party_data
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
-            print(error)
-            return None
+            err = {'error' : str(error)}
+            print(err)
+            return err
         finally:
             if conn is not None:
                 conn.close()
@@ -69,7 +68,7 @@ class PartyTable:
         return None
 
     def delete_party(self, id):
-        return self.db.delete_one('party', 'id', id)
+        return self.delete_one('party', 'id', id)
 
     def party_data(self, party):
         party_data = {}
