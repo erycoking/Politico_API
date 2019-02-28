@@ -36,9 +36,9 @@ def add_candidate(current_user, office_id):
                     'error': added_cand['error']
                 }), 400)
             return make_response(jsonify({
-                'status': 200, 
+                'status': 201, 
                 'data': [added_cand]
-            }), 200)
+            }), 201)
         else:
             return make_response(jsonify({
                 'status': 409, 
@@ -128,7 +128,7 @@ def delete_candidate(current_user, office_id, id):
             return make_response(jsonify({
                 'status': 200, 
                 'data' : {
-                    'message' : 'candidate successfully deleted'
+                    'message' : 'candidates with id:1 successfully deleted'
                 }
             }), 200)
         else:

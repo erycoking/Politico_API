@@ -2,7 +2,7 @@ import pytest
 from ...base import test_client, token, standard, error_standard
 
 def init(test_client, token):
-
+    
     office = {
         "type": "state", 
         "name": "president"
@@ -52,84 +52,96 @@ def init(test_client, token):
 
     assert response_2.status_code == 201
 
-@pytest.fixture(scope='module')
-def candidates():
-    candidates = {
-        "party":"jubilee"
-    }
-    return candidates
 
 @pytest.fixture(scope='module')
-def candidates_2():
-    candidates = {
-        "party":"Nasa"
+def petition():
+    petition = {
+        "office": "president", 
+        "body": "election was rigged", 
+        "evidence": ["evidence_1", "evidence_2"]
     }
-    return candidates
+    return petition
+
 
 @pytest.fixture(scope='module')
-def bad_candidates():
-    candidates = {
+def petition_2():
+    petition = {
+        "office": "president", 
+        "body": "election was unfair", 
+        "evidence": ["evidence_1", "evidence_2", "evidence_3"]
     }
-    return candidates
+    return petition
 
 @pytest.fixture(scope='module')
-def bad_candidates_2():
-    candidates = candidates = {
-        "party":1,
+def bad_petition():
+    petition = {
+        "body": "election was unfair", 
+        "evidence": ["evidence_1", "evidence_2", "evidence_3"]
     }
-    return candidates
+    return petition
 
-def test_add_candidates(test_client, token, candidates):
+@pytest.fixture(scope='module')
+def bad_petition_2():
+    petition = {
+        "office": "qwertyu",
+        "body": "election was unfair", 
+        "evidence": ["evidence_1", "evidence_2", "evidence_3"]
+    }
+    return petition
+
+def test_add_petition(test_client, token, petition):
     init(test_client, token)
 
-    url = '/api/v2/office/1/register'
+    url = '/api/v2/petitions'
     response  = test_client.open(url, method='POST', headers={
         'Authorization': 'Bearer {}'.format(token)
-    }, json=candidates)
+    }, json=petition)
     assert response.status_code == 201
     response_data = standard(response)
     data = response_data['data']
     assert len(data) == 1
-    candidates_1 = data[0]
-    assert 'office' in candidates_1 and candidates_1['office'] == 'president'
-    assert 'party' in candidates_1 and candidates_1['party'] == 'jubilee'
-    assert 'id' in candidates_1 and candidates_1['id'] == 1
+    petition_1 = data[0]
+    assert 'office' in petition_1 and petition_1['office'] == 'president'
+    assert 'body' in petition_1 and petition_1['body'] == 'election was rigged'
+    assert 'id' in petition_1 and petition_1['id'] == 1
 
-def test_add_bad_candidates(test_client, token, bad_candidates):
-    url = '/api/v2/office/1/register'
+def test_add_bad_petition(test_client, token, bad_petition):
+    url = '/api/v2/petitions'
     response  = test_client.open(url, method='POST', headers={
         'Authorization': 'Bearer {}'.format(token)
-    }, json=bad_candidates)
+    }, json=bad_petition)
     assert response.status_code == 400
     data = error_standard(response)
     message = data['error']
-    assert message == 'party missing'
+    assert message == 'office missing'
 
 
-def test_add_bad_candidates_2(test_client, token, bad_candidates_2):
-    url = '/api/v2/office/1/register'
+def test_add_bad_petition_2(test_client, token, bad_petition_2):
+    url = '/api/v2/petitions'
     response  = test_client.open(url, method='POST', headers={
         'Authorization': 'Bearer {}'.format(token)
-    }, json=bad_candidates_2)
-    assert response.status_code == 500
+    }, json=bad_petition_2)
+    assert response.status_code == 400
+    data = error_standard(response)
+    message = data['error']
+    assert message == 'Office does not exist'
 
-
-def test_update_candidates(test_client, token, candidates_2):
-    url = '/api/v2/office/1/candidates/1'
+def test_update_petition(test_client, token, petition_2):
+    url = '/api/v2/petitions/1'
     response  = test_client.open(url, method='PATCH', headers={
         'Authorization': 'Bearer {}'.format(token)
-    }, json=candidates_2)
+    }, json=petition_2)
     assert response.status_code == 200
     response_data = standard(response)
     data = response_data['data']
     assert len(data) == 1
-    candidates_1 = data[0]
-    assert 'office' in candidates_1 and candidates_1['office'] == 'president'
-    assert 'party' in candidates_1 and candidates_1['party'] == 'Nasa'
-    assert 'id' in candidates_1 and candidates_1['id'] == 1
+    petition_1 = data[0]
+    assert 'office' in petition_1 and petition_1['office'] == 'president'
+    assert 'body' in petition_1 and petition_1['body'] == 'election was unfair'
+    assert 'id' in petition_1 and petition_1['id'] == 1
 
-def test_get_all_candidatess(test_client, token):
-    url = '/api/v2/office/1/candidates'
+def test_get_all_petitions(test_client, token):
+    url = '/api/v2/petitions'
     response = test_client.open(url, method='GET', headers={
             'Authorization': 'Bearer {}'.format(token)
         }
@@ -138,14 +150,14 @@ def test_get_all_candidatess(test_client, token):
     response_data = standard(response)
     data = response_data['data']
     assert len(data) == 1
-    candidates_1 = data[0]
-    assert candidates_1 is not None
-    assert 'office' in candidates_1 and candidates_1['office'] == 'president'
-    assert 'party' in candidates_1 and candidates_1['party'] == 'Nasa'
-    assert 'id' in candidates_1 and candidates_1['id'] == 1
+    petition_1 = data[0]
+    assert petition_1 is not None
+    assert 'office' in petition_1 and petition_1['office'] == 'president'
+    assert 'body' in petition_1 and petition_1['body'] == 'election was unfair'
+    assert 'id' in petition_1 and petition_1['id'] == 1
 
-def test_get_single_candidates(test_client, token):
-    url = '/api/v2/office/1/candidates/1'
+def test_get_single_petition(test_client, token):
+    url = '/api/v2/petitions/1'
     response = test_client.open(url, method='GET', headers={
             'Authorization': 'Bearer {}'.format(token)
         }
@@ -154,14 +166,14 @@ def test_get_single_candidates(test_client, token):
     response_data = standard(response)
     data = response_data['data']
     assert len(data) == 1
-    candidates_1 = data[0]
-    assert candidates_1 is not None
-    assert 'office' in candidates_1 and candidates_1['office'] == 'president'
-    assert 'party' in candidates_1 and candidates_1['party'] == 'Nasa'
-    assert 'id' in candidates_1 and candidates_1['id'] == 1
+    petition_1 = data[0]
+    assert petition_1 is not None
+    assert 'office' in petition_1 and petition_1['office'] == 'president'
+    assert 'body' in petition_1 and petition_1['body'] == 'election was unfair'
+    assert 'id' in petition_1 and petition_1['id'] == 1
 
-def test_delete_candidates(test_client, token):
-    url = '/api/v2/office/1/candidates/1'
+def test_delete_petition(test_client, token):
+    url = '/api/v2/petitions/1'
     response = test_client.open(url, method='DELETE', headers={
             'Authorization': 'Bearer {}'.format(token)
         }
@@ -170,4 +182,6 @@ def test_delete_candidates(test_client, token):
     response_data = standard(response)
     data = response_data['data']
     assert 'message' in data
-    assert data['message'] == 'candidates with id:1 successfully deleted'
+    assert data['message'] == 'petition with id:1 successfully deleted'
+
+

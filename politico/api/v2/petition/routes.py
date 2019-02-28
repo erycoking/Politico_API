@@ -34,9 +34,9 @@ def add_petition(current_user):
                     'error': added_petition['error']
                 }), 400)
             return make_response(jsonify({
-                'status': 200, 
+                'status': 201, 
                 'data': [added_petition]
-            }), 200)
+            }), 201)
         else:
             return make_response(jsonify({
                 'status': 409, 
@@ -126,7 +126,7 @@ def delete_petition(current_user, id):
             return make_response(jsonify({
                 'status': 200, 
                 'data' : {
-                    'message' : 'petition successfully deleted'
+                    'message' : 'petition with id:{} successfully deleted'.format(id)
                 }
             }), 200)
         else:
@@ -138,16 +138,14 @@ def delete_petition(current_user, id):
 
 
 def validate_petition_info(petition):
-    office = office_tb.get_one_office_by_name(petition['office'])
-
     msg = None
     if not petition:
         msg = 'petition information is required'
     elif 'office' not in petition:
-        msg = 'office id missing'
+        msg = 'office missing'
     elif not (str(petition['office'])).isalpha():
         msg = 'Invalid Office name. Office name should be a string'
-    elif not office:
+    elif not office_tb.get_one_office_by_name(petition['office']):
         msg =  'Office does not exist'
     else:
         msg = 'ok'

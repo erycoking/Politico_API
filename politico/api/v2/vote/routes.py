@@ -37,9 +37,9 @@ def add_vote(current_user):
                     'error': added_vote['error']
                 }), 400)
             return make_response(jsonify({
-                'status': 200, 
+                'status': 201, 
                 'data': [added_vote]
-            }), 200)
+            }), 201)
         else:
             return make_response(jsonify({
                 'status': 409, 
@@ -71,72 +71,72 @@ def get_one_vote(current_user, id):
         }), 200)
 
 
-@vote.route('/votes/<int:id>', methods=['PATCH'])
-@token_required
-def update_vote(current_user, id):
-    admin = bool(current_user['is_admin'])
-    if not (admin):
-        print("I am in")
-        return make_response(jsonify({
-                'status': 401,
-                'error': 'Only admin can perform this function'
-            }), 401)
-    existing_vote = votes_tb.get_one_vote(id)
-    if not existing_vote:
-        return make_response(jsonify({
-            'status': 404, 
-            'error' : 'vote with id:{} does not exist'.format(id)
-        }), 404)
+# @vote.route('/votes/<int:id>', methods=['PATCH'])
+# @token_required
+# def update_vote(current_user, id):
+#     admin = bool(current_user['is_admin'])
+#     if not (admin):
+#         print("I am in")
+#         return make_response(jsonify({
+#                 'status': 401,
+#                 'error': 'Only admin can perform this function'
+#             }), 401)
+#     existing_vote = votes_tb.get_one_vote(id)
+#     if not existing_vote:
+#         return make_response(jsonify({
+#             'status': 404, 
+#             'error' : 'vote with id:{} does not exist'.format(id)
+#         }), 404)
         
-    vote_data = request.get_json()
-    msg = validate_vote_info(vote_data)
-    if msg != 'ok':
-        return make_response(jsonify({
-            'status':400, 
-            'error': msg
-        }), 400)
+#     vote_data = request.get_json()
+#     msg = validate_vote_info(vote_data)
+#     if msg != 'ok':
+#         return make_response(jsonify({
+#             'status':400, 
+#             'error': msg
+#         }), 400)
 
-    vote_data['created_by'] = current_user['id']
-    updated_vote = votes_tb.update_vote(id, vote_data)
-    if 'error' in updated_vote:
-        return make_response(jsonify({
-            'status':400, 
-            'error': updated_vote['error']
-        }), 400)
-    return make_response(jsonify({
-        'status': 200, 
-        'data': [updated_vote]
-    }), 200)
+#     vote_data['created_by'] = current_user['id']
+#     updated_vote = votes_tb.update_vote(id, vote_data)
+#     if 'error' in updated_vote:
+#         return make_response(jsonify({
+#             'status':400, 
+#             'error': updated_vote['error']
+#         }), 400)
+#     return make_response(jsonify({
+#         'status': 200, 
+#         'data': [updated_vote]
+#     }), 200)
     
-@vote.route('/votes/<int:id>', methods=['DELETE'])
-@token_required
-def delete_vote(current_user, id):
-    admin = bool(current_user['is_admin'])
-    if not (admin):
-        print("I am in")
-        return make_response(jsonify({
-                'status': 401,
-                'error': 'Only admin can perform this function'
-            }), 401)
-    existing_vote = votes_tb.get_one_vote(id)
-    if not existing_vote:
-        return make_response(jsonify({
-            'status': 404, 
-            'error' : 'vote with id:{} does not exist'.format(id)
-        }), 404)
-    else:
-        if votes_tb.delete_vote(id):
-            return make_response(jsonify({
-                'status': 200, 
-                'data' : {
-                    'message' : 'vote successfully deleted'
-                }
-            }), 200)
-        else:
-            return make_response(jsonify({
-                'status': 400, 
-                'error' : 'update or delete on table "vote" violates foreign key constraint.\nKey (id)=({}) is referenced on another table'.format(id)
-            }), 400)
+# @vote.route('/votes/<int:id>', methods=['DELETE'])
+# @token_required
+# def delete_vote(current_user, id):
+#     admin = bool(current_user['is_admin'])
+#     if not (admin):
+#         print("I am in")
+#         return make_response(jsonify({
+#                 'status': 401,
+#                 'error': 'Only admin can perform this function'
+#             }), 401)
+#     existing_vote = votes_tb.get_one_vote(id)
+#     if not existing_vote:
+#         return make_response(jsonify({
+#             'status': 404, 
+#             'error' : 'vote with id:{} does not exist'.format(id)
+#         }), 404)
+#     else:
+#         if votes_tb.delete_vote(id):
+#             return make_response(jsonify({
+#                 'status': 200, 
+#                 'data' : {
+#                     'message' : 'vote successfully deleted'
+#                 }
+#             }), 200)
+#         else:
+#             return make_response(jsonify({
+#                 'status': 400, 
+#                 'error' : 'update or delete on table "vote" violates foreign key constraint.\nKey (id)=({}) is referenced on another table'.format(id)
+#             }), 400)
 
 
 
