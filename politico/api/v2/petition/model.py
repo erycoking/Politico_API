@@ -1,6 +1,8 @@
 import psycopg2
 from politico.api.v2.db import DB
 import datetime
+from politico.api.v2.office.model import OfficeTable
+from politico.api.v2.users.model import UserTable
 
 class PetitionTable(DB):
     """petition table"""
@@ -31,19 +33,21 @@ class PetitionTable(DB):
         return petitions
 
     def create_petition(self, petition_data):
-
+        office_tb = OfficeTable()
+        office = office_tb.get_one_office_by_name(petition_data['office'])
         conn = self.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
                 """insert into petition(created_by, office, body, evidence) values(%s, %s, %s,  %s) RETURNING id;""",  
-                 (petition_data['created_by'], petition_data['office'], petition_data['body'], petition_data['evidence'])
+                 (petition_data['created_by'], office['id'], petition_data['body'], petition_data['evidence'])
                 )
-            petition_data['id'] = cursor.fetchone()[0]
-            date = datetime.datetime.now().date()
-            petition_data['created_on'] = str(date)
             conn.commit()
-            return petition_data
+            petition_id = cursor.fetchone()[0]
+            print(petition_id)
+            petition_details = self.get_one_petition(petition_id)
+            print(petition_details)
+            return petition_details
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             err = {'error' : str(error)}
             print(err)
@@ -55,19 +59,19 @@ class PetitionTable(DB):
         return None
 
     def update_petition(self, id, petition_data):
+        office_tb = OfficeTable()
+        office = office_tb.get_one_office_by_name(petition_data['office'])
         conn =  self.connection()
         try:
             cursor = conn.cursor()
             cursor.execute(
                 """update petition set created_by = %s, office = %s, body = %s, evidence = %s where id = %s RETURNING id;""", 
-                (petition_data['created_by'], petition_data['office'], petition_data['body'], petition_data['evidence'], id)
+                (petition_data['created_by'], office['id'], petition_data['body'], petition_data['evidence'], id)
             )
-
-            petition_data['id'] = cursor.fetchone()[0]
-            date = datetime.datetime.now().date()
-            petition_data['created_on'] = str(date)
             conn.commit()
-            return petition_data
+            petition_id = cursor.fetchone()[0]
+            petition_details = self.get_one_petition(petition_id)
+            return petition_details
         except (Exception, psycopg2.DatabaseError, psycopg2.IntegrityError) as error:
             err = {'error' : str(error)}
             print(err)
@@ -82,12 +86,15 @@ class PetitionTable(DB):
         return self.delete_one('petition', 'id', id)
 
     def petition_data(self, petition):
+        user_tb = UserTable()
+        user = user_tb.get_single_user(petition[2])
+        office_tb = OfficeTable()
+        office = office_tb.get_one_office(petition[3])
         petition_data = {}
-        date = str(petition[1])
         petition_data['id'] = petition[0]
-        petition_data['created_on'] = date
-        petition_data['created_by'] = petition[2]
-        petition_data['office'] = petition[3]
+        petition_data['created_on'] = str(petition[1])
+        petition_data['created_by'] = user['firstname']
+        petition_data['office'] = office['name']
         petition_data['body'] = petition[4]
         petition_data['evidence'] = petition[5]
         return petition_data

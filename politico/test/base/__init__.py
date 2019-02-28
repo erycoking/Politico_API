@@ -12,7 +12,6 @@ def test_client():
     ctx = app.app_context()
     ctx.push()
     db = DB()
-    db.initialize_db()
     yield test_client
     db.tear_down_test_database()
     ctx.pop()
@@ -35,22 +34,9 @@ def error_standard(response):
 
 @pytest.fixture(scope='module')
 def token(test_client):
-    user = {
-            "email": "erycoking360@gmail.com",
-            "firstname": "erycoking",
-            "id_no": "30761234",
-            "is_admin": True,
-            "lastname": "Lomunyak",
-            "othername": "Loningo",
-            "passport_url": "http://passports.com/passport4.png",
-            "phone_number": "0702554146", 
-            "username":"erycoking",
-            "password":"erycoking"
-        }
-    test_client.post('/api/v2/auth/signup', json = user)
     login_credentials = dict(
-        username='erycoking',
-        password='erycoking'
+        username='pheonix',
+        password='admin123'
     )
     response = test_client.post('/api/v2/auth/login', json = login_credentials)
     assert response.status_code == 200

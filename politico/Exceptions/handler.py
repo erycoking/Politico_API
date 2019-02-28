@@ -7,7 +7,11 @@ error = Blueprint('error_handler', __name__)
 def handle_error(err):
     message = str(err)
     err_list = message.split(' ')
-    status_code = int(err_list[0])
+    if str(err_list[0]).isdigit():
+        status_code = int(err_list[0])
+    else:
+        status_code = 500
+    
     return make_response(jsonify({
             'status': status_code,
             'error': message

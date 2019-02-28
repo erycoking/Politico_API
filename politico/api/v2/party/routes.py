@@ -35,6 +35,13 @@ def get_one_party(current_user, id):
 @party.route('/parties', methods=['POST'])
 @token_required
 def add_party(current_user):
+    admin = bool(current_user['is_admin'])
+    if not (admin):
+        print("I am in")
+        return make_response(jsonify({
+                'status': 401,
+                'error': 'Only admin can perform this function'
+            }), 401)
     party_data = request.get_json()
     msg = validateKeysInParty(party_data)
     if msg != 'ok':
@@ -71,6 +78,13 @@ def add_party(current_user):
 @party.route('/parties/<int:id>', methods=['PATCH'])
 @token_required
 def update_party(current_user, id):
+    admin = bool(current_user['is_admin'])
+    if not (admin):
+        print("I am in")
+        return make_response(jsonify({
+                'status': 401,
+                'error': 'Only admin can perform this function'
+            }), 401)
     existing_party = party_tb.get_one_party(id)
     if not existing_party:
         return make_response(jsonify({
@@ -107,6 +121,13 @@ def update_party(current_user, id):
 @party.route('/parties/<int:id>', methods=['DELETE'])
 @token_required
 def delete_party(current_user, id):
+    admin = bool(current_user['is_admin'])
+    if not (admin):
+        print("I am in")
+        return make_response(jsonify({
+                'status': 401,
+                'error': 'Only admin can perform this function'
+            }), 401)
     existing_party = party_tb.get_one_party(id)
     if not existing_party:
         return make_response(jsonify({

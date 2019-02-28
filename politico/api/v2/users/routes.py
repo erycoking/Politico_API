@@ -37,6 +37,14 @@ def get_all(current_user):
 @user.route('/users/<int:id>', methods=['PATCH'])
 @token_required
 def update_user(current_user, id):
+    admin = bool(current_user['is_admin'])
+    if not (admin) and current_user['id'] != id:
+        print("I am in")
+        return make_response(jsonify({
+                'status': 401,
+                'error': 'Please contact admin'
+            }), 401)
+        
     data = request.get_json()
     msg = validate_keys_in_user_data(data)
     if msg != 'ok':
@@ -67,7 +75,14 @@ def update_user(current_user, id):
     
 @user.route('/users/<int:id>', methods=['DELETE'])
 @token_required
-def delete_user(current_user, id):  
+def delete_user(current_user, id):
+    admin = bool(current_user['is_admin'])
+    if not (admin):
+        print("I am in")
+        return make_response(jsonify({
+                'status': 401,
+                'error': 'Only admin can perform this function'
+            }), 401)
     user_exists = user_tb.get_single_user(id)
     if not user_exists:
         return make_response(jsonify({

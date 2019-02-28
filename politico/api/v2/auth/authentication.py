@@ -71,7 +71,9 @@ def login():
         }), 401, {'WWW-Authenticate' : 'Basic realm="Login Required!"'})
 
     if check_password_hash(user['password'], credentials['password']):
-        token = jwt.encode({'public_id': user['id'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, APP_CONFIG['secret'])
+        token = jwt.encode({'public_id': user['id'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)}, APP_CONFIG['secret'])
+        # del user['username']
+        del user['password']
         return make_response(jsonify({
             'status': 200,
             'data': [{
@@ -109,14 +111,13 @@ def add_new_user():
             'error': msg2
         }), 409)
     else:
-        print(user_tb.connection)
         new_user = user_tb.add_user(data)
         if 'error' in new_user:
             return make_response(jsonify({
                 'status': 400,
                 'error': new_user['error']
             }), 400)
-        token = jwt.encode({'public_id': new_user['id'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, APP_CONFIG['secret'])
+        token = jwt.encode({'public_id': new_user['id'], 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1)}, APP_CONFIG['secret'])
         return make_response(jsonify({
             'status': 200,
             'data': [{
@@ -124,7 +125,6 @@ def add_new_user():
                 'user': new_user
             }]
         }))
-        
 
 
 def check_if_user_exists(data):
