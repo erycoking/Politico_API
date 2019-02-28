@@ -82,6 +82,7 @@ class DB:
             else:
                 URL = os.getenv('DATABASE_URL')
 
+            print(URL)
             conn = psycopg2.connect(URL)
             return conn
         except (Exception, psycopg2.DatabaseError) as error:
@@ -120,6 +121,7 @@ class DB:
                 cursor.execute(query_two)
                 conn.commit()
                 admin_added = cursor.fetchone()[0]
+                print(str(admin_added))
                 if admin_added:
                     print('Admin successfully added')
         except (Exception, psycopg2.DatabaseError) as error:
