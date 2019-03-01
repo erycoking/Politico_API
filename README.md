@@ -37,7 +37,6 @@ Clone the repository using the following command
 ```
 git clone https://github.com/erycoking/Politico_API.git
 ``` 
-and replace the *url* with the relevant url
 
 Change directrory to Politico_API using the following command 
 ```
