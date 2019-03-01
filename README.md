@@ -1,7 +1,7 @@
 # Politico_API
 ## Introduction
-[![Build Status](https://travis-ci.org/erycoking/Politico_API.svg?branch=develop)](https://travis-ci.org/erycoking/Politico_API)
-[![Coverage Status](https://coveralls.io/repos/github/erycoking/Politico_API/badge.svg?branch=develop)](https://coveralls.io/github/erycoking/Politico_API?branch=develop) 
+[![Build Status](https://travis-ci.org/erycoking/Politico_API.svg?branch=develop_v2)](https://travis-ci.org/erycoking/Politico_API)
+[![Coverage Status](https://coveralls.io/repos/github/erycoking/Politico_API/badge.svg?branch=develop_v2)](https://coveralls.io/github/erycoking/Politico_API?branch=develop_v2)
 [![Maintainability](https://api.codeclimate.com/v1/badges/46f93969162ab80fd0c4/maintainability)](https://codeclimate.com/github/erycoking/Politico_API/maintainability)
 
 ## Run in Postman
