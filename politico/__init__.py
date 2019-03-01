@@ -2,6 +2,7 @@
 
 # import flask
 from flask import Flask, jsonify, make_response
+from flask_cors import CORS
 from politico.api.v2.db import DB
 
 # import global exception handler
@@ -31,6 +32,7 @@ from politico.Exceptions.handler import error
 def create_app(config):
 
     app = Flask(__name__, instance_relative_config=True)
+    CORS(app)
     app.config.from_object(APP_CONFIG[config])
     app.app_context().push()
     # app.config.from_pyfile('config.py')
