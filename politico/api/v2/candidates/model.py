@@ -95,6 +95,7 @@ class CandidateTable(DB):
         candidate_data['id'] = candidate[0]
         candidate_data['office'] = office['name']
         candidate_data['party'] = party['name']
+        candidate_data['party_logo_url'] = party['logo_url']
         candidate_data['candidate'] = user['fullname']
         candidate_data['candidate_photo_url'] = user['passport_url']
         return candidate_data
