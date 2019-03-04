@@ -82,11 +82,7 @@ class VotesTable(DB):
     def vote_data(self, vote):
         user_tb = UserTable()
         user = user_tb.get_single_user(vote[2])
-        user_fullname = ''
-        if user['othername'] != '':
-            user_fullname = '' + user['firstname'] +' '+ user['lastname'] +' '+ user['othername']
-        else:
-            user_fullname = '' + user['firstname'] +' '+ user['othername']
+        user_fullname = '' + user['firstname'] +' '+ user['lastname'] +' '+ user['othername']
 
         office_tb = OfficeTable()
         office = office_tb.get_one_office(vote[3])
