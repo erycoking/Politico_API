@@ -158,5 +158,5 @@ def test_get_single_vote(test_client, token):
     vote_1 = data[0]
     assert vote_1 is not None
     assert 'office' in vote_1 and vote_1['office'] == 'president'
-    assert 'candidate' in vote_1 and vote_1['candidate'] == 'Erick'
+    assert 'candidate' in vote_1 and vote_1['candidate'] == 'Erick Loningo Lomunyak'
     assert 'result' in vote_1 and vote_1['result'] == 1
