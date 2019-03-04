@@ -165,8 +165,8 @@ def validate_value_in_user_data(user):
             msg = 'Invalid phone_number.Enter a valid kenyan phone number'
         elif not re.fullmatch(image_url_pattern, user['passport_url']) or len(user['passport_url']) < 3:
             msg = 'Invalid passport_url.Please provide a valid url'
-        elif not str(user['id_no']).isdigit() or len(str(user['id_no'])) < 7:
-            msg = 'Invalid Id No.Id No must be less than 7 digits and should contain no letters'
+        elif not str(user['id_no']).isdigit() or len(str(user['id_no'])) < 4 or len(str(user['id_no'])) > 20:
+            msg = 'Invalid Id No.Id No must be between 4 and 20 characters and should contain only numbers'
         elif not user['username'].isalnum() or len(user['username']) < 3:
             msg = 'Invalid username.Username must be longer than 2 characters and should only contain alphanumeric characters'
         elif not user['password'] or len(user['password']) < 8:

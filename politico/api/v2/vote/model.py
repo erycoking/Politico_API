@@ -82,8 +82,6 @@ class VotesTable(DB):
     def vote_data(self, vote):
         user_tb = UserTable()
         user = user_tb.get_single_user(vote[2])
-        user_fullname = '' + user['firstname'] +' '+ user['lastname'] +' '+ user['othername']
-
         office_tb = OfficeTable()
         office = office_tb.get_one_office(vote[3])
         cand_tb = CandidateTable()
@@ -91,7 +89,7 @@ class VotesTable(DB):
         vote_data = {}
         vote_data['id'] = vote[0]
         vote_data['created_on'] = str(vote[1])
-        vote_data['created_by'] = user_fullname
+        vote_data['created_by'] = user['fullname']
         vote_data['office'] = office['name']
         vote_data['candidate'] = cand['candidate']
         return vote_data

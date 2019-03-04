@@ -56,6 +56,9 @@ class UserTable(DB):
         else:
             phone = phone_no
 
+        if 'othername' not in user_data:
+            user_data['othername'] = ''
+
         try:
             cursor = conn.cursor()
             password = generate_password_hash(user_data['password'], method='sha256')
@@ -85,6 +88,9 @@ class UserTable(DB):
 
     def update_user(self, id, user_data):
         # add a new user to the users list
+
+        if 'othername' not in user_data:
+            user_data['othername'] = ''
 
         conn = self.connection()
         try:
@@ -129,6 +135,10 @@ class UserTable(DB):
         user_data['is_admin'] = user[8]
         user_data['username'] = user[9]
         user_data['password'] = user[10]
+        if str(user[3]) != '':
+            user_data['fullname'] = user[1] +' '+ user[3] +' '+ user[2]
+        else:
+            user_data['fullname'] = user[1] +' '+ user[2]
         return user_data
 
     def user_data_2(self, user):
@@ -143,6 +153,10 @@ class UserTable(DB):
         user_data['passport_url'] = user[6]
         user_data['id_no'] = user[7]
         user_data['is_admin'] = user[8]
+        if str(user[3]) != '':
+            user_data['fullname'] = user[1] +' '+ user[3] +' '+ user[2]
+        else:
+            user_data['fullname'] = user[1] +' '+ user[2]
         return user_data
 
 
