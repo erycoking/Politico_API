@@ -91,12 +91,17 @@ class OfficeTable(DB):
             cand_detail = self.fetch_one('candidates', 'id', cand[0])
             user_details = self.fetch_one('users', 'id', cand_detail[3])
             print(user_details)
+            fullname = ''
+            if str(user_details[3]) != '':
+                fullname = user_details[1] +' '+ user_details[3] +' '+ user_details[2]
+            else:
+                fullname = user_details[1] +' '+ user_details[2]
             votes = self.fetch_all_using_int_key('vote', 'candidate', cand[0])
             total_vote_for_specific_candidate = len(votes)
 
             candidate_result = {
                 'office': office['name'], 
-                'candidate': user_details[1], 
+                'candidate': fullname, 
                 'result': total_vote_for_specific_candidate
             }
 

@@ -102,7 +102,7 @@ def test_login(test_client):
     assert 'token' in data[0]
     user = data[0]['user']
     assert 'firstname' in user and user['firstname'] == 'Erick'
-    assert 'lastname' in user and user['lastname'] == 'Loningo'
+    assert 'lastname' in user and user['lastname'] == 'Lomunyak'
 
 def test_get_all_users(test_client, token):
     url = prefix + '/users'

@@ -102,8 +102,8 @@ def test_add_vote(test_client, token, vote):
     assert len(data) == 1
     vote_1 = data[0]
     assert 'office' in vote_1 and vote_1['office'] == 'president'
-    assert 'candidate' in vote_1 and vote_1['candidate'] == 'Erick Lomunyak Loningo'
-    assert 'created_by' in vote_1 and vote_1['created_by'] == 'Erick Lomunyak Loningo'
+    assert 'candidate' in vote_1 and vote_1['candidate'] == 'Erick Loningo Lomunyak'
+    assert 'created_by' in vote_1 and vote_1['created_by'] == 'Erick Loningo Lomunyak'
     assert 'id' in vote_1 and vote_1['id'] == 1
 
 def test_add_bad_vote(test_client, token, bad_vote):
@@ -141,8 +141,8 @@ def test_get_all_votes(test_client, token):
     vote_1 = data[0]
     assert vote_1 is not None
     assert 'office' in vote_1 and vote_1['office'] == 'president'
-    assert 'candidate' in vote_1 and vote_1['candidate'] == 'Erick Lomunyak Loningo'
-    assert 'created_by' in vote_1 and vote_1['created_by'] == 'Erick Lomunyak Loningo'
+    assert 'candidate' in vote_1 and vote_1['candidate'] == 'Erick Loningo Lomunyak'
+    assert 'created_by' in vote_1 and vote_1['created_by'] == 'Erick Loningo Lomunyak'
     assert 'id' in vote_1 and vote_1['id'] == 1
 
 def test_get_single_vote(test_client, token):
@@ -158,5 +158,5 @@ def test_get_single_vote(test_client, token):
     vote_1 = data[0]
     assert vote_1 is not None
     assert 'office' in vote_1 and vote_1['office'] == 'president'
-    assert 'candidate' in vote_1 and vote_1['candidate'] == 'Erick'
+    assert 'candidate' in vote_1 and vote_1['candidate'] == 'Erick Loningo Lomunyak'
     assert 'result' in vote_1 and vote_1['result'] == 1
