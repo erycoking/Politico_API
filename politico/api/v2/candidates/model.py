@@ -87,6 +87,12 @@ class CandidateTable(DB):
     def candidate_data(self, candidate):
         user_tb = UserTable()
         user = user_tb.get_single_user(candidate[3])
+        user_fullname = ''
+        if user['othername'] != '':
+            user_fullname = '' + user['firstname'] +' '+ user['lastname'] +' '+ user['othername']
+        else:
+            user_fullname = '' + user['firstname'] +' '+ user['othername']
+        
         office_tb = OfficeTable()
         office = office_tb.get_one_office(candidate[1])
         party_tb = PartyTable()
@@ -95,5 +101,5 @@ class CandidateTable(DB):
         candidate_data['id'] = candidate[0]
         candidate_data['office'] = office['name']
         candidate_data['party'] = party['name']
-        candidate_data['candidate'] = user['firstname']
+        candidate_data['candidate'] = user_fullname
         return candidate_data
