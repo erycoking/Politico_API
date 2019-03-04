@@ -90,6 +90,8 @@ class VotesTable(DB):
         vote_data['id'] = vote[0]
         vote_data['created_on'] = str(vote[1])
         vote_data['created_by'] = user['fullname']
+        vote_data['voter_photo_url'] = user['passport_url']
         vote_data['office'] = office['name']
         vote_data['candidate'] = cand['candidate']
+        vote_data['candidate_photo_url'] = cand['candidate_photo_url']
         return vote_data
