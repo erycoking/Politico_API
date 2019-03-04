@@ -94,6 +94,7 @@ class PetitionTable(DB):
         petition_data['id'] = petition[0]
         petition_data['created_on'] = str(petition[1])
         petition_data['created_by'] = user['fullname']
+        petition_data['petitioner_photo_url'] = user['passport_url']
         petition_data['office'] = office['name']
         petition_data['body'] = petition[4]
         petition_data['evidence'] = petition[5]
