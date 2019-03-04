@@ -146,7 +146,7 @@ def validate_keys_in_user_data(user):
 def validate_value_in_user_data(user):
     
     email_pattern = re.compile(r'[^@]+@[^@]+\.[^@]+')
-    image_url_pattern = re.compile(r'https?://(www\.)?(\w+)(\.\w+)/(\w+/)*(\w+\.)(jpeg|png|jpg)')
+    image_url_pattern = re.compile(r'^https?://(www\.)?(\w+)(\.\w+)/(\w+/)*.*$')
     phone_number_pattern = re.compile(r'^(2547|07)\d{8}$')
 
     if 'othername' in user:

@@ -88,12 +88,18 @@ class PetitionTable(DB):
     def petition_data(self, petition):
         user_tb = UserTable()
         user = user_tb.get_single_user(petition[2])
+        user_fullname = ''
+        if user['othername'] != '':
+            user_fullname = '' + user['firstname'] +' '+ user['lastname'] +' '+ user['othername']
+        else:
+            user_fullname = '' + user['firstname'] +' '+ user['othername']
+
         office_tb = OfficeTable()
         office = office_tb.get_one_office(petition[3])
         petition_data = {}
         petition_data['id'] = petition[0]
         petition_data['created_on'] = str(petition[1])
-        petition_data['created_by'] = user['firstname']
+        petition_data['created_by'] = user_fullname
         petition_data['office'] = office['name']
         petition_data['body'] = petition[4]
         petition_data['evidence'] = petition[5]
