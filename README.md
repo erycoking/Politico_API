@@ -67,12 +67,12 @@ pip install -r requirements.txt
 ### Test the Application
 ``` pytest```
 
-## API ENDPOINTS
+## API ENDPOINTS FOR VERSION 1
 ### User Endpoint :/api/v1
 METHOD | ENDPOINT | FUNCTIONALITY
 -------|-----------|--------------
 GET | /users | Gets all users
-GET | /users/int:id | Gets all a single user
+GET | /users/int:id | Gets a single user
 POST | /users | Adds a user
 PATCH | /users | Updates a user
 DELETE | /users/int:id | Deletes a user
@@ -81,7 +81,7 @@ DELETE | /users/int:id | Deletes a user
 METHOD | ENDPOINT | FUNCTIONALITY
 -------|-----------|--------------
 GET | /parties | Gets all parties
-GET | /parties/int:id | Gets all a single party
+GET | /parties/int:id | Gets a single party
 POST | /parties | Adds a party
 PATCH | /parties | Updates a party
 DELETE | /parties/int:id | Deletes a party
@@ -90,7 +90,7 @@ DELETE | /parties/int:id | Deletes a party
 METHOD | ENDPOINT | FUNCTIONALITY
 -------|-----------|--------------
 GET | /offices | Gets all offices
-GET | /offices/int:id | Gets all a single office
+GET | /offices/int:id | Gets a single office
 POST | /offices | Adds a office
 PATCH | /offices | Updates a office
 DELETE | /offices/int:id | Deletes a office
@@ -99,7 +99,67 @@ DELETE | /offices/int:id | Deletes a office
 METHOD | ENDPOINT | FUNCTIONALITY
 -------|-----------|--------------
 GET | /candidates | Gets all Candidates
-GET | /candidates/int:id | Gets all a single Candidate
+GET | /candidates/int:id | Gets a single Candidate
 POST | /candidates | Adds a Candidate
 PATCH | /candidates | Updates a Candidate
 DELETE | /candidates/int:id | Deletes a Candidate
+
+## API ENDPOINTS FOR VERSION 2
+
+### Auth Endpoint :/api/v2
+METHOD | ENDPOINT | FUNCTIONALITY
+-------|-----------|--------------
+POST | /auth/signup | User Sign up
+POST | /auth/login | User Login
+
+### User Endpoint :/api/v2
+METHOD | ENDPOINT | FUNCTIONALITY
+-------|-----------|--------------
+GET | /users | Gets all users
+GET | /users/int:id | Gets a single user
+PATCH | /users | Updates a user
+DELETE | /users/int:id | Deletes a user
+
+### Party Endpoint :/api/v2
+METHOD | ENDPOINT | FUNCTIONALITY
+-------|-----------|--------------
+GET | /parties | Gets all parties
+GET | /parties/int:id | Gets a single party
+POST | /parties | Adds a party
+PATCH | /parties | Updates a party
+DELETE | /parties/int:id | Deletes a party
+
+### Office Endpoint :/api/v2
+METHOD | ENDPOINT | FUNCTIONALITY
+-------|-----------|--------------
+GET | /offices | Gets all offices
+GET | /offices/int:id | Gets a single office
+POST | /offices | Adds a office
+PATCH | /offices | Updates a office
+DELETE | /offices/int:id | Deletes a office
+
+### Candidate Endpoint :/api/v2
+METHOD | ENDPOINT | FUNCTIONALITY
+-------|-----------|--------------
+GET | /office/int:id/candidates | Gets all Candidates belonging to a particular office
+GET | /office/int:id/candidates/int:id | Gets a single Candidate belonging to a particular office
+POST | /office/int:id/register | Adds a Candidate to a particular office
+PATCH | /office/int:id/candidates | Updates a Candidate belonging to a particular office
+DELETE | /office/int:id/candidates/int:id | Deletes a Candidate belonging to a particular office
+
+### Vote Endpoint :/api/v2
+METHOD | ENDPOINT | FUNCTIONALITY
+-------|-----------|--------------
+GET | /votes | Gets all votes
+GET | /offices/int:id/result | Gets votes for a single office
+POST | /votes | Cast a votes
+
+### Petition Endpoint :/api/v2
+METHOD | ENDPOINT | FUNCTIONALITY
+-------|-----------|--------------
+GET | /petitions | Gets all petitions
+GET | /petitions/int:id | Gets a single petition
+POST | /petitions | Adds a petition
+PATCH | /petitions | Updates a petition
+DELETE | /petitions/int:id | Deletes a petition
+
