@@ -118,6 +118,28 @@ class UserTable(DB):
 
         return None
 
+    def update_user_password(self, id, user_data):
+        # add a new user to the users list
+
+        conn = self.connection()
+        try:
+            cursor = conn.cursor()
+            password = generate_password_hash(user_data['password'], method='sha256')
+            cursor.execute(
+                """update users set password = %s where id = %s RETURNING id;""", (password, id)
+            )
+            conn.commit()
+            user_id = cursor.fetchone()[0]
+            print(user_id)
+            user_details = self.get_single_user(user_id)
+            return user_details      
+        except (Exception, psycopg2.DatabaseError) as error:
+            err = {'error': str(error)}
+            print(err)
+            return err
+
+        return None
+
     def delete_user(self, id):
         return self.delete_one('users', 'id', id)
 

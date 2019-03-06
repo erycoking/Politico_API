@@ -1,7 +1,7 @@
 """ Initialize the application"""
 
 # import flask
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify, make_response, render_template
 from flask_cors import CORS
 from politico.api.v2.db import DB
 
@@ -27,13 +27,20 @@ from politico import config
 from politico.config import APP_CONFIG
 from politico.Exceptions.handler import error
 
+from flask_mail import Mail, Message
 
+mail = ''
 
 def create_app(config):
 
     app = Flask(__name__, instance_relative_config=True)
     CORS(app)
     app.config.from_object(APP_CONFIG[config])
+
+    # initializing mailing
+    global mail
+    mail = Mail(app)
+
     app.app_context().push()
     # app.config.from_pyfile('config.py')
     
@@ -67,3 +74,21 @@ def create_app(config):
     app.register_blueprint(auth, url_prefix=auth_prefix_2)
 
     return app
+
+
+def send_mail(user):
+    try:
+        link = 'https://erycoking.github.io/Politico/UI/user_reset_password.html'
+
+        msg = Message("Reset Password", 
+            sender="erycoking360@gmail.com", 
+            recipients=[user['email']])
+        msg.body = 'Hello '+ user['fullname'] + ', \nYou have requested to reset your password. If you made this request, then please follow this link:'+link
+        msg.html = render_template('email_template.html', fullname=user['fullname'], link=link)
+
+        mail.send(msg)
+
+        return 'success'
+    except Exception as e:
+        print(e)
+        return 'fail'
