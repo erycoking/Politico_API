@@ -1,28 +1,40 @@
-""" Initialize the application"""
+""" Defining environment configurations """
 
-# import flask
-from flask import Flask
+# Standard import
+import os
 
-# import blueprints
-from politico.api.v1.user.routes import user
-from politico.api.v1.party.routes import party
-from politico.api.v1.office.route import office
-from politico.api.v1.candidate.routes import cand
-
-
-
-def create_app():
-
-    # create the app
-    app = Flask(__name__)
-
-    prefix = '/api/v1'
-
-    # register blueprints
-    app.register_blueprint(user, url_prefix=prefix)
-    app.register_blueprint(party, url_prefix=prefix)
-    app.register_blueprint(office, url_prefix=prefix)
-    app.register_blueprint(cand, url_prefix=prefix)
+class Config:
+    """ Define common configurations for all environments """
+    SECRET_KEY = os.getenv('SECRET_KEY')
+    DATABASE_URL = os.getenv('DATABASE_URL')
+    MAIL_SERVER = os.getenv('MAIL_SERVER')
+    MAIL_PORT = os.getenv('MAIL_PORT')
+    MAIL_USE_SSL = os.getenv('MAIL_USE_SSL')
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
 
 
-    return app
+class TestingConfig(Config):
+    """ Defines configurations for testing """
+    TESTING = True
+    DATABASE_URL = os.getenv('TEST_DATABASE_URL')
+
+
+class DevelopmentConfig(Config):
+    """ Defines configurations for development """
+    DEBUG = True
+    DATABASE_URL = os.getenv('DATABASE_URL')
+
+
+class ProductionConfig(Config):
+    """ Defines configurations for production """
+    TESTING = False
+    DEBUG = False
+
+
+APP_CONFIG = dict(
+    testing=TestingConfig,
+    development=DevelopmentConfig,
+    production=ProductionConfig,
+    secret=Config.SECRET_KEY
+)

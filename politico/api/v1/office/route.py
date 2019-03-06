@@ -3,6 +3,8 @@
 # import custom modules
 from flask import Blueprint, request, make_response, jsonify
 
+import re
+
 # import custom modules
 from politico.api.v1.office.model import Office
 from politico.api.v1.office.model import OfficeTable
@@ -110,6 +112,7 @@ def delete_office(id):
 
 def validate_office_data(office):
     # validates office input
+    name_url = re.compile(r'[A-Za-z]{2,25}( [A-Za-z]{2,25})*')
     msg = None
     if not office:
         msg = 'No office data found'
@@ -117,10 +120,10 @@ def validate_office_data(office):
         msg = 'office type missing'
     elif 'name' not in office:
         msg = 'office name missing'
-    elif office['type'] not in ['federal', 'legislative', 'state', 'local_government']:
+    elif office['type'] not in ['federal', 'legislative', 'state', 'local government']:
         msg = 'Invalid office type.'
-    elif not isinstance(office['name'], str):
-        msg = 'Invalid office name. Office name should be made of strings'
+    elif not re.fullmatch(name_url, office['name']):
+        msg = 'Invalid office name. Office name should be made of alphabets only'
     elif len(office['name']) < 3:
         msg = 'Invalid office name. Office name should be greater than 3 characters'
     else:

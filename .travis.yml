@@ -5,7 +5,15 @@ python:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
-  
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c "CREATE DATABASE test_politico;" -U postgres
+  - psql -c "CREATE USER erycoking WITH PASSWORD 'king1234';" -U postgres
+  - psql -c "grant all privileges on database test_politico to erycoking;" -U postgres
+
 # command to run tests
 script:
   - pytest
